@@ -1,6 +1,6 @@
-import type { NextConfig } from "next";
-
 /**
+ * Plain JavaScript, deliberately — see the note at the bottom of this file.
+ *
  * Security headers.
  *
  * No CSP yet: a correct one has to be written against the real analytics and
@@ -19,7 +19,8 @@ const securityHeaders = [
   },
 ];
 
-const nextConfig: NextConfig = {
+/** @type {import("next").NextConfig} */
+const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   // Trailing-slash consistency matters for canonical URLs: pick one and keep it.
@@ -47,3 +48,17 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
+/*
+ * Why .mjs and not .ts
+ *
+ * Hostinger's build container runs glibc 2.28. Next's native SWC binary
+ * (@next/swc-linux-x64-gnu) needs GLIBC_2.29, so it fails to load and Next
+ * falls back to @next/swc-wasm-nodejs. Under that fallback, compiling a
+ * TypeScript next.config emits a next.config.compiled.js that imports a
+ * hashed temp module which never gets written, and the build dies with
+ * ERR_MODULE_NOT_FOUND before it reads a single page.
+ *
+ * A plain-JS config needs no compilation, so the config loads either way.
+ * The JSDoc annotation above keeps full type checking in the editor.
+ */

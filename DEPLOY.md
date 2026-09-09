@@ -50,7 +50,8 @@ source to be public.
 2. Choose **Import Git Repository** and authorise GitHub
 3. Pick the repository and the `main` branch
 4. Hostinger auto-detects Next.js. Confirm:
-   - Build command `npm run build`
+   - Build command `npm run build` (this runs `next build --webpack` — see
+     *Why the build uses Webpack* below)
    - Start command `npm start`
    - Output directory `.next`
    - Node version **22.x** — not 20. The Supabase client requires
@@ -161,3 +162,39 @@ Three options, worst to best:
 3. **Host elsewhere, keep the domain at Hostinger.** Deploy to a Node host and
    point the DNS. Contradicts the stack brief's "start on Hostinger", but it is
    the least effort of the three and costs nothing at this traffic level.
+
+---
+
+## Why the build uses Webpack
+
+Hostinger's build container runs **glibc 2.28**. Next's native SWC binary
+needs `GLIBC_2.29`, so on that host it fails to load:
+
+```
+Attempted to load @next/swc-linux-x64-gnu, but an error occurred:
+/lib64/libm.so.6: version `GLIBC_2.29' not found
+```
+
+Next falls back to `@next/swc-wasm-nodejs`, which works but has two knock-on
+effects, both of which broke the first deploys:
+
+1. **A TypeScript `next.config.ts` cannot be compiled** under the WASM
+   fallback. It emits a `next.config.compiled.js` importing a hashed temp
+   module that never gets written, and the build dies with
+   `ERR_MODULE_NOT_FOUND` before reading a single page. Fixed by using a
+   plain-JS `next.config.mjs`; the JSDoc annotation keeps editor types.
+
+2. **Turbopack cannot run at all.** It is native Rust from the same `@next/swc`
+   package. `npm run build` therefore passes `--webpack`.
+
+Neither is a Node version problem. Node 20 and Node 22 both require glibc
+2.28, so switching Node version does not change the glibc available and will
+not fix this.
+
+The build will be noticeably slower on the server than locally, because
+transforms run through WASM rather than the native binary. For a site this
+size that is a non-issue.
+
+**If you later move to a host with glibc 2.29 or newer** (any current VPS
+image, or Vercel), switch the build command to `npm run build:turbopack` for a
+significantly faster build. Nothing else changes.
