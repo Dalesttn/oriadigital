@@ -28,6 +28,6 @@
   },
   "description": "Oria Digital \u2014 websites, AI and automation for Australian businesses.",
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   }
 }

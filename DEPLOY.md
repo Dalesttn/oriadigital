@@ -53,7 +53,10 @@ source to be public.
    - Build command `npm run build`
    - Start command `npm start`
    - Output directory `.next`
-   - Node version **20.x or newer** (Next 16 requires it)
+   - Node version **22.x** — not 20. The Supabase client requires
+     Node >= 22, and Node 20 produces a wall of `EBADENGINE` warnings and
+     risks a runtime failure in the contact endpoint. `.nvmrc` and
+     `engines` both declare 22, but set it explicitly in hPanel as well.
 
 ### 3. Set the environment variables
 
@@ -63,6 +66,8 @@ In the app's **Environment Variables** panel, add everything from
 | Variable | Value |
 |---|---|
 | `NEXT_PUBLIC_SITE_URL` | `https://oriadigital.com.au` — no trailing slash |
+
+**Node version:** set it to **22.x** before the first build.
 
 `NEXT_PUBLIC_SITE_URL` is baked in at **build** time, so set it *before* the
 first build. Every canonical URL, the sitemap and all structured data derive

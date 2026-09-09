@@ -187,8 +187,9 @@ alter table public.leads enable row level security;
 
 ## Deployment
 
-Built for a Node host — Hostinger's Node hosting, per the stack brief. Requires
-Node 20+.
+Built for a Node host — Hostinger's Node hosting, per the stack brief.
+**Requires Node 22 or newer**: the Supabase client declares `engines.node >= 22`,
+and Node 20 both warns on install and risks failing at runtime.
 
 ```bash
 npm ci
