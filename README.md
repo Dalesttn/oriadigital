@@ -147,10 +147,9 @@ node -e "require('sharp')('SOURCE').resize(1600).jpeg({quality:86,mozjpeg:true})
 
 **Services**
 
-- [ ] Supabase: create the `leads` table and set `SUPABASE_URL` /
-      `SUPABASE_SERVICE_ROLE_KEY`
-- [ ] Resend: verify the sending domain, set `RESEND_API_KEY` and
-      `CONTACT_FROM_EMAIL`
+- [ ] Supabase and Resend — full walkthrough in [INTEGRATIONS.md](./INTEGRATIONS.md).
+      Until both are set the contact form accepts submissions and delivers
+      nowhere.
 - [ ] GA4 property → `NEXT_PUBLIC_GA4_ID`
 - [ ] Search Console: verify, then submit `/sitemap.xml`
 - [ ] Bing Webmaster Tools: verify and submit the same sitemap (Bing's index
@@ -163,25 +162,7 @@ node -e "require('sharp')('SOURCE').resize(1600).jpeg({quality:86,mozjpeg:true})
 - [ ] Have `/privacy` and `/terms` reviewed. They are honest working drafts
       describing what the site actually does, not lawyer-reviewed documents.
 
-**Suggested `leads` table**
-
-```sql
-create table public.leads (
-  id          uuid primary key default gen_random_uuid(),
-  created_at  timestamptz not null default now(),
-  name        text not null,
-  business    text not null,
-  email       text not null,
-  website     text,
-  concern     text not null,
-  message     text,
-  source      text not null default 'website-contact-form'
-);
-
-alter table public.leads enable row level security;
--- No policies: inserts come from the server with the service-role key, which
--- bypasses RLS. Anonymous clients get nothing.
-```
+The `leads` table DDL is in [INTEGRATIONS.md](./INTEGRATIONS.md).
 
 ---
 

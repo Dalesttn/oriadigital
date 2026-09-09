@@ -87,6 +87,7 @@ Add these when the accounts exist, then redeploy:
 
 Until Supabase and Resend are set, the form validates and accepts submissions
 but delivers nowhere. Do not go live on advertising before both are connected.
+Step-by-step: [INTEGRATIONS.md](./INTEGRATIONS.md).
 
 ### 4. Attach the domain
 
