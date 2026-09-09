@@ -1,0 +1,13 @@
+# Normalise line endings. The repo stores LF; Windows checkouts get CRLF.
+# Without this, a Linux build host sees every file as modified.
+* text=auto eol=lf
+
+# Binaries must never be line-ending converted.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.avif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
