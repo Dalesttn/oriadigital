@@ -75,6 +75,8 @@ export async function POST(request: Request) {
   }
 
   const failures: string[] = [];
+  /** Which services failed, by name. Returned to the caller; the reason is not. */
+  const failedSinks: string[] = [];
 
   // 1. Persist the enquiry.
   const supabaseUrl = process.env.SUPABASE_URL;
@@ -94,9 +96,13 @@ export async function POST(request: Request) {
         message: data.message || null,
         source: "website-contact-form",
       });
-      if (error) failures.push(`supabase: ${error.message}`);
+      if (error) {
+        failures.push(`supabase: ${error.message}`);
+        failedSinks.push("supabase");
+      }
     } catch (err) {
       failures.push(`supabase: ${(err as Error).message}`);
+      failedSinks.push("supabase");
     }
   }
 
@@ -123,19 +129,28 @@ export async function POST(request: Request) {
           data.message || "(no message)",
         ].join("\n"),
       });
-      if (error) failures.push(`resend: ${error.message}`);
+      if (error) {
+        failures.push(`resend: ${error.message}`);
+        failedSinks.push("resend");
+      }
     } catch (err) {
       failures.push(`resend: ${(err as Error).message}`);
+      failedSinks.push("resend");
     }
   }
 
   if (failures.length) {
     console.error("[contact] delivery failures:", failures.join(" | "));
     // A configured sink failed — say so rather than showing a false success.
+    //
+    // `sink` names which service broke but never why. Naming the service makes
+    // a production failure diagnosable without shell access to the logs; the
+    // underlying message can carry connection strings and is kept server-side.
     return NextResponse.json(
       {
         ok: false,
         error: `Something went wrong sending your request. Please email ${site.contact.email} directly.`,
+        sink: failedSinks,
       },
       { status: 502 },
     );
