@@ -110,7 +110,14 @@ export function SiteFooter() {
             Contact
           </span>
           <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
-          {site.contact.phone && <a href={`tel:${site.contact.phone}`}>{site.contact.phone}</a>}
+          {site.contact.phone && (
+            <a href={`tel:${site.contact.phone}`}>{site.contact.phoneDisplay}</a>
+          )}
+          {site.founder.sameAs[0] && (
+            <a href={site.founder.sameAs[0]} rel="me noopener" target="_blank">
+              LinkedIn
+            </a>
+          )}
           {site.contact.abn && <span style={{ color: "var(--dark-fg-mid)" }}>ABN {site.contact.abn}</span>}
           <div style={{ marginTop: 10 }}>
             <Button href={primaryCta.href} arrow>

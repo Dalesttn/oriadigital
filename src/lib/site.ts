@@ -34,15 +34,16 @@ export const site = {
     /** Short first-person bio used in Person schema and the About page. */
     bio:
       "Dale is the founder of Oria Digital, an independent studio covering web development, digital strategy, IT, AI and automation for Australian small businesses.",
-    sameAs: [
-      // PLACEHOLDER — "https://www.linkedin.com/in/…"
-    ] as string[],
+    sameAs: ["https://www.linkedin.com/in/dale-michael-sutton/"] as string[],
     image: "/team/dale-sutton.jpg",
   },
 
   contact: {
-    email: "hello@oriadigital.com.au",
-    phone: "", // PLACEHOLDER — E.164, e.g. "+61400000000"
+    email: "info@oriadigital.com.au",
+    /** E.164 — the only format schema.org and tel: links should carry. */
+    phone: "+61431630244",
+    /** How the number is written for people to read. */
+    phoneDisplay: "0431 630 244",
     abn: "46 243 774 311",
   },
 

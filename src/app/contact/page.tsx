@@ -143,7 +143,7 @@ export default function ContactPage() {
 
             <div style={{ marginTop: 34, fontSize: 14, lineHeight: 1.75, color: "var(--color-neutral-800)" }}>
               <span className="label" style={{ marginBottom: 8 }}>
-                Prefer email?
+                Prefer to call or email?
               </span>
               <a
                 href={`mailto:${site.contact.email}`}
@@ -152,6 +152,17 @@ export default function ContactPage() {
                 {site.contact.email}
               </a>
               <br />
+              {site.contact.phone && (
+                <>
+                  <a
+                    href={`tel:${site.contact.phone}`}
+                    style={{ color: "var(--accent-start)", textDecoration: "underline" }}
+                  >
+                    {site.contact.phoneDisplay}
+                  </a>
+                  <br />
+                </>
+              )}
               {site.address.locality} · working with businesses Australia-wide
             </div>
           </div>

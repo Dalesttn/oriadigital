@@ -75,7 +75,7 @@ Add these when the accounts exist, then redeploy:
 |---|---|
 | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | enquiry storage. Service-role key is server-only |
 | `RESEND_API_KEY`, `CONTACT_FROM_EMAIL` | notification email. Sender must be a verified domain |
-| `CONTACT_NOTIFY_EMAIL` | where enquiries land, if not `hello@oriadigital.com.au` |
+| `CONTACT_NOTIFY_EMAIL` | where enquiries land, if not `info@oriadigital.com.au` |
 | `NEXT_PUBLIC_GA4_ID` | GA4 measurement ID |
 | `NEXT_PUBLIC_GSC_VERIFICATION` | Search Console HTML-tag token |
 
