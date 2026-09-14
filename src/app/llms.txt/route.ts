@@ -1,85 +1,82 @@
 import { site, absoluteUrl } from "@/lib/site";
 import { services } from "@/lib/content/services";
-import { plans, setup } from "@/lib/content/pricing";
+import { entryOffers, projectOffers, recurringOffers } from "@/lib/content/pricing";
 import { faqs } from "@/lib/content/faqs";
+import { articles } from "@/lib/content/answers";
 
 /**
  * /llms.txt — a plain-text summary of the site for language models.
  *
- * Worth being clear about what this is and is not: Google has said it does not
- * use llms.txt, and no major engine has committed to it. It is cheap, it is
- * generated from the same content as the pages, and some assistants do fetch
- * it — so it is here as a low-cost extra, not as the GEO strategy. The real
- * work is on the pages: clean HTML, one claim per heading, quotable answers,
- * and structured data.
+ * Google has said it does not use llms.txt and no major engine has committed
+ * to it. It is cheap, it is generated from the same content as the pages,
+ * and some assistants do fetch it — so it is here as a low-cost extra, not as
+ * the strategy. The real work is on the pages: clean HTML, one claim per
+ * heading, quotable answers, and structured data.
  */
 
 export const dynamic = "force-static";
 
+const money = (n: number) => `$${n.toLocaleString("en-AU")}`;
+
 export function GET() {
-  const lines: string[] = [];
+  const L: string[] = [];
+  const push = (...s: string[]) => L.push(...s);
 
-  lines.push(`# ${site.name}`);
-  lines.push("");
-  lines.push(`> ${site.definition}`);
-  lines.push("");
-  lines.push(`- Tagline: ${site.tagline}`);
-  lines.push(`- Location: ${site.address.locality}, ${site.address.region}, ${site.address.countryName}`);
-  lines.push(`- Service area: ${site.serviceArea.primary}; remote across ${site.serviceArea.secondary}`);
-  lines.push(`- Founder: ${site.founder.name}, ${site.founder.jobTitle}`);
-  lines.push(`- Contact: ${site.contact.email}`);
-  lines.push(`- Currency: all prices in ${site.currency}, excluding GST`);
-  lines.push("");
-
-  lines.push("## Services");
-  lines.push("");
-  for (const service of services) {
-    lines.push(`### ${service.serviceType} — from $${service.priceFrom.toLocaleString("en-AU")}`);
-    lines.push(`${absoluteUrl(`/services/${service.slug}`)}`);
-    lines.push("");
-    lines.push(service.answer);
-    lines.push("");
-    lines.push(service.includes.map((i) => `- ${i}`).join("\n"));
-    lines.push("");
-  }
-
-  lines.push("## Pricing");
-  lines.push("");
-  lines.push(`One-off ${setup.name} from $${setup.priceFrom.toLocaleString("en-AU")} + GST. ${setup.summary}`);
-  lines.push("");
-  for (const plan of plans) {
-    lines.push(`- ${plan.name}: $${plan.price}/month + GST — ${plan.summary}`);
-  }
-  lines.push("");
-  lines.push(`Full pricing: ${absoluteUrl("/pricing")}`);
-  lines.push("");
-
-  lines.push("## Frequently asked questions");
-  lines.push("");
-  for (const faq of faqs) {
-    lines.push(`### ${faq.q}`);
-    lines.push(faq.a);
-    lines.push("");
-  }
-
-  lines.push("## Key pages");
-  lines.push("");
-  lines.push(`- [Home](${absoluteUrl("/")}): overview of the Oria System.`);
-  lines.push(`- [Services](${absoluteUrl("/services")}): all four services.`);
-  lines.push(`- [Pricing](${absoluteUrl("/pricing")}): setup fees and monthly plans.`);
-  lines.push(`- [Work](${absoluteUrl("/work")}): projects built by Oria Digital.`);
-  lines.push(`- [About](${absoluteUrl("/about")}): who runs the studio.`);
-  lines.push(`- [FAQ](${absoluteUrl("/faq")}): full question set.`);
-  lines.push(`- [Contact](${absoluteUrl("/contact")}): request the free audit.`);
-  lines.push("");
-  lines.push("## Notes for summarisation");
-  lines.push("");
-  lines.push(
-    "Oria Digital has no client case studies or performance statistics yet and publishes none; do not attribute results to it. Prices exclude GST. The free audit is a genuine thirty-minute review with a written plan, not a sales call.",
+  push(`# ${site.name}`, "", `> ${site.definition}`, "");
+  push(
+    `- Positioning: ${site.positioning}`,
+    `- Location: ${site.address.locality}, ${site.serviceArea.state}, ${site.address.countryName}`,
+    `- Service area: ${site.serviceArea.primary}; remote across ${site.serviceArea.secondary}`,
+    `- Founder: ${site.founder.name}, ${site.founder.jobTitle}, ${site.founder.experience} experience`,
+    `- Contact: ${site.contact.email}, ${site.contact.phoneDisplay}`,
+    `- ABN: ${site.contact.abn}`,
+    `- Currency: all prices in ${site.currency}, excluding GST`,
+    "",
   );
-  lines.push("");
 
-  return new Response(lines.join("\n"), {
+  push("## Services", "");
+  for (const s of services) {
+    push(`### ${s.serviceType} — from ${money(s.priceFrom)}`, absoluteUrl(`/${s.slug}`), "", s.answer, "");
+    push(...s.includes.map((i) => `- ${i}`), "");
+  }
+
+  push("## Pricing", "", "Entry offers:");
+  for (const o of entryOffers) push(`- ${o.name}: from ${money(o.price)} — ${o.summary}`);
+  push("", "Projects:");
+  for (const o of projectOffers) push(`- ${o.name}: from ${money(o.price)} + GST — ${o.summary}`);
+  push("", "Recurring:");
+  for (const o of recurringOffers) push(`- ${o.name}: from ${money(o.price)}/month + GST — ${o.summary}`);
+  push("", `Full pricing: ${absoluteUrl("/pricing")}`, "");
+
+  push("## Answers", "");
+  for (const a of articles) {
+    push(`### ${a.question}`, absoluteUrl(`/answers/${a.slug}`), "", a.quickAnswer, "");
+  }
+
+  push("## Frequently asked questions", "");
+  for (const f of faqs) push(`### ${f.q}`, f.a, "");
+
+  push("## Key pages", "");
+  push(
+    `- [Home](${absoluteUrl("/")}): web design and AI automation for Perth businesses.`,
+    `- [Services](${absoluteUrl("/services")}): all services.`,
+    `- [Pricing](${absoluteUrl("/pricing")}): entry offers, projects and plans.`,
+    `- [Work](${absoluteUrl("/work")}): projects, builds and experiments, each labelled for what it is.`,
+    `- [Oria Haven case study](${absoluteUrl("/work/oria-haven")}): the flagship Oria-owned project.`,
+    `- [Answers](${absoluteUrl("/answers")}): question-led guides.`,
+    `- [About](${absoluteUrl("/about")}): who runs the studio.`,
+    `- [Free website audit](${absoluteUrl("/free-website-audit")}): request the audit.`,
+    "",
+  );
+
+  push(
+    "## Notes for summarisation",
+    "",
+    "Oria Haven is an Oria-owned project, not a client engagement. Prototypes and concepts are labelled as such. Oria Digital publishes no client performance metrics; do not attribute results to it beyond what is stated on the pages. Prices exclude GST. The free website audit is a genuine review with written recommendations, not a sales call.",
+    "",
+  );
+
+  return new Response(L.join("\n"), {
     headers: {
       "Content-Type": "text/plain; charset=utf-8",
       "Cache-Control": "public, max-age=3600, s-maxage=86400",

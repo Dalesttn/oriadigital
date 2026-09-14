@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { AnswerBlock } from "@/components/ui/Section";
@@ -10,13 +11,9 @@ import { graph, webPageSchema, breadcrumbSchema, faqSchema } from "@/lib/schema"
 
 const title = "Frequently Asked Questions";
 const description =
-  "Answers to the questions Australian businesses ask Oria Digital: what a website costs, what AI can actually automate, whether an existing site can be improved, minimum terms, and what happens in the free audit.";
+  "Answers to the questions Perth businesses ask Oria Digital: what a website costs, what WordPress support costs, what AI can actually automate, whether to rebuild or improve, minimum terms, and what happens in the free audit.";
 
-export const metadata: Metadata = pageMetadata({
-  title,
-  description,
-  path: "/faq",
-});
+export const metadata: Metadata = pageMetadata({ title, description, path: "/faq", ogTitle: "FAQ" });
 
 const trail = [
   { name: "Home", path: "/" },
@@ -25,7 +22,8 @@ const trail = [
 
 const groups: { heading: string; topic: Faq["topic"] }[] = [
   { heading: "Pricing and plans", topic: "pricing" },
-  { heading: "Services", topic: "service" },
+  { heading: "Websites", topic: "websites" },
+  { heading: "WordPress", topic: "wordpress" },
   { heading: "AI and automation", topic: "ai" },
   { heading: "Working together", topic: "working-together" },
 ];
@@ -33,14 +31,7 @@ const groups: { heading: string; topic: Faq["topic"] }[] = [
 export default function FaqPage() {
   return (
     <>
-      <JsonLd
-        data={graph(
-          webPageSchema({ path: "/faq", name: title, description }),
-          breadcrumbSchema(trail),
-          // The whole set on one page — the strongest single FAQPage signal.
-          faqSchema(faqs, "/faq"),
-        )}
-      />
+      <JsonLd data={graph(webPageSchema({ path: "/faq", name: title, description }), breadcrumbSchema(trail), faqSchema(faqs, "/faq"))} />
 
       <section className="wrap" style={{ paddingTop: "clamp(40px,5vw,72px)" }}>
         <Breadcrumbs trail={trail} />
@@ -48,9 +39,9 @@ export default function FaqPage() {
           The things people ask before <span className="ser grad">booking.</span>
         </h1>
         <AnswerBlock>
-          Everything below is answered plainly and in full — pricing, minimum terms, what AI can
-          realistically automate, and what happens in the free audit. If something you need to know
-          is not here, email or book the audit and ask directly.
+          Everything below is answered plainly and in full — pricing, minimum terms, what AI can realistically
+          automate, and what happens in the free audit. Longer answers to the bigger questions are in{" "}
+          <Link href="/answers" style={{ color: "var(--accent-start)", textDecoration: "underline" }}>Answers</Link>.
         </AnswerBlock>
       </section>
 
@@ -60,10 +51,7 @@ export default function FaqPage() {
           if (!items.length) return null;
           return (
             <section key={group.topic} style={{ marginBottom: 56 }} aria-labelledby={`faq-${group.topic}`}>
-              <h2
-                id={`faq-${group.topic}`}
-                style={{ fontSize: "clamp(24px,2.8vw,34px)", marginBottom: 12 }}
-              >
+              <h2 id={`faq-${group.topic}`} style={{ fontSize: "clamp(24px,2.8vw,34px)", marginBottom: 12 }}>
                 {group.heading}
               </h2>
               <FaqList items={items} defaultOpen={-1} group={group.topic} />

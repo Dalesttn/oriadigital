@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
-import { primaryCta, serviceRoutes } from "@/lib/nav";
+import { primaryCta, serviceRoutes, resourceRoutes } from "@/lib/nav";
 import { site } from "@/lib/site";
 import { OriaLockup } from "@/components/ui/OriaMark";
+import { events } from "@/lib/analytics";
 
-const marqueeWords = ["Build", "Automate", "Improve", "Website · AI · Automation"];
+const marqueeWords = ["Get found", "Convert", "Qualify", "Follow up", "Book", "Improve"];
 
 function MarqueeRun({ ariaHidden }: { ariaHidden?: boolean }) {
   return (
@@ -15,21 +16,14 @@ function MarqueeRun({ ariaHidden }: { ariaHidden?: boolean }) {
       {marqueeWords.map((word) => (
         <span key={word} style={{ display: "inline-flex", alignItems: "center", gap: 30 }}>
           {word}
-          <span
-            aria-hidden="true"
-            style={{
-              width: 8,
-              height: 8,
-              borderRadius: 999,
-              background: "rgba(242,237,230,.24)",
-            }}
-          />
+          <span aria-hidden="true" style={{ width: 8, height: 8, borderRadius: 999, background: "rgba(242,237,230,.24)" }} />
         </span>
       ))}
     </span>
   );
 }
 
+/** Footer per the brief: Services, Resources, Contact, Legal. No keyword stuffing. */
 export function SiteFooter() {
   const year = new Date().getFullYear();
 
@@ -48,79 +42,51 @@ export function SiteFooter() {
           margin: "0 auto",
           padding: "clamp(48px,6vw,80px) clamp(24px,4vw,64px) 40px",
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,240px),1fr))",
-          gap: "44px clamp(32px,5vw,64px)",
+          gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,220px),1fr))",
+          gap: "44px clamp(28px,4vw,56px)",
           alignItems: "start",
         }}
       >
         <div>
           <OriaLockup markSize={44} fontSize={20} onDark />
-          <p
-            className="ser"
-            style={{
-              margin: "14px 0 22px",
-              fontSize: "clamp(19px,2vw,25px)",
-              lineHeight: 1.3,
-              color: "var(--dark-fg-mid)",
-            }}
-          >
-            {site.tagline}
+          <p className="ser" style={{ margin: "14px 0 18px", fontSize: "clamp(19px,2vw,25px)", lineHeight: 1.3, color: "var(--dark-fg-mid)" }}>
+            {site.positioning}
           </p>
-          <span
-            style={{
-              display: "block",
-              fontSize: "10.5px",
-              fontWeight: 700,
-              letterSpacing: ".18em",
-              textTransform: "uppercase",
-              color: "var(--dark-fg-dim)",
-              lineHeight: 2,
-            }}
-          >
-            {site.address.locality}, {site.address.countryName}
+          <span style={{ display: "block", fontSize: "10.5px", fontWeight: 700, letterSpacing: ".18em", textTransform: "uppercase", color: "var(--dark-fg-dim)", lineHeight: 2 }}>
+            {site.address.locality}, {site.address.region}
             <br />
             Working Australia-wide
           </span>
         </div>
 
         <nav aria-label="Services" style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 14 }}>
-          <span className="label on-dark" style={{ marginBottom: 6 }}>
-            Services
-          </span>
+          <span className="label on-dark" style={{ marginBottom: 6 }}>Services</span>
           {serviceRoutes.map((r) => (
             <Link key={r.href} href={r.href}>
               {r.label}
+              {r.href.endsWith("-perth") && !["/website-optimisation-perth", "/ai-automation-perth", "/website-maintenance-perth"].includes(r.href) ? " Perth" : ""}
             </Link>
           ))}
         </nav>
 
-        <nav aria-label="Company" style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 14 }}>
-          <span className="label on-dark" style={{ marginBottom: 6 }}>
-            Company
-          </span>
-          <Link href="/work">Work</Link>
-          <Link href="/pricing">Pricing</Link>
-          <Link href="/about">About</Link>
+        <nav aria-label="Resources" style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 14 }}>
+          <span className="label on-dark" style={{ marginBottom: 6 }}>Resources</span>
+          {resourceRoutes.map((r) => (
+            <Link key={r.href} href={r.href}>{r.label}</Link>
+          ))}
           <Link href="/faq">FAQ</Link>
-          <Link href="/contact">Contact</Link>
         </nav>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 14 }}>
-          <span className="label on-dark" style={{ marginBottom: 6 }}>
-            Contact
-          </span>
+          <span className="label on-dark" style={{ marginBottom: 6 }}>Contact</span>
           <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
-          {site.contact.phone && (
-            <a href={`tel:${site.contact.phone}`}>{site.contact.phoneDisplay}</a>
-          )}
+          {site.contact.phone && <a href={`tel:${site.contact.phone}`}>{site.contact.phoneDisplay}</a>}
           {site.founder.sameAs[0] && (
-            <a href={site.founder.sameAs[0]} rel="me noopener" target="_blank">
-              LinkedIn
-            </a>
+            <a href={site.founder.sameAs[0]} rel="me noopener" target="_blank">LinkedIn</a>
           )}
           {site.contact.abn && <span style={{ color: "var(--dark-fg-mid)" }}>ABN {site.contact.abn}</span>}
           <div style={{ marginTop: 10 }}>
-            <Button href={primaryCta.href} arrow>
+            <Button href={primaryCta.href} arrow data-track={events.auditCtaClick} data-track-label="footer">
               {primaryCta.label}
             </Button>
           </div>
@@ -141,9 +107,7 @@ export function SiteFooter() {
           borderTop: "1px solid var(--dark-hair)",
         }}
       >
-        <span>
-          © {year} {site.name}
-        </span>
+        <span>© {year} {site.name} · Perth, Western Australia</span>
         <span style={{ display: "flex", gap: 16 }}>
           <Link href="/privacy">Privacy</Link>
           <Link href="/terms">Terms</Link>

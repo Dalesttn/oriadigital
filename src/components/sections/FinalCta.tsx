@@ -1,22 +1,29 @@
 import { Button } from "@/components/ui/Button";
 import { primaryCta } from "@/lib/nav";
 import { site } from "@/lib/site";
+import { events } from "@/lib/analytics";
 
+/**
+ * The closing call to action. Same ask as the hero — one dominant CTA on
+ * the site, restated where the visitor has finished reading.
+ */
 export function FinalCta({
   title,
   body,
+  cta,
   className = "",
 }: {
   title?: React.ReactNode;
   body?: string;
+  /** Page-specific primary action; defaults to the free audit. */
+  cta?: { label: string; href: string; event?: string };
   className?: string;
 }) {
+  const primary = cta ?? { label: primaryCta.labelLong, href: primaryCta.href, event: events.auditCtaClick };
+
   return (
     <section style={{ padding: "0 var(--gut) var(--sec)" }} className={className} aria-labelledby="cta-heading">
-      <div
-        className="dark-panel sys"
-        style={{ maxWidth: "var(--content)", margin: "0 auto", overflow: "hidden" }}
-      >
+      <div className="dark-panel sys" style={{ maxWidth: "var(--content)", margin: "0 auto", overflow: "hidden" }}>
         <div
           style={{
             position: "relative",
@@ -30,34 +37,22 @@ export function FinalCta({
           <h2
             id="cta-heading"
             data-reveal
-            style={{
-              fontSize: "clamp(36px,5vw,74px)",
-              maxWidth: "16ch",
-              color: "var(--dark-fg)",
-            }}
+            style={{ fontSize: "clamp(36px,5vw,74px)", maxWidth: "16ch", color: "var(--dark-fg)" }}
           >
             {title ?? (
               <>
-                Let&rsquo;s find what&rsquo;s holding your business{" "}
-                <span className="ser">back.</span>
+                Not sure what your website <span className="ser">needs?</span>
               </>
             )}
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 22, alignItems: "start" }}>
-            <p
-              style={{
-                fontSize: "17.5px",
-                lineHeight: 1.74,
-                maxWidth: "42ch",
-                color: "var(--dark-fg-mid)",
-              }}
-            >
+            <p style={{ fontSize: "17.5px", lineHeight: 1.74, maxWidth: "42ch", color: "var(--dark-fg-mid)" }}>
               {body ??
-                "Get a free audit and I'll show you the highest-impact improvements I'd make to your digital presence. Thirty minutes, no pitch — you keep the written plan either way."}
+                "I'll review it and send you the three biggest opportunities I can see — in writing, within two business days, free. You keep the plan whether or not we work together."}
             </p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-              <Button href={primaryCta.href} size="lg" arrow>
-                Book my Digital System Audit
+              <Button href={primary.href} size="lg" arrow data-track={primary.event}>
+                {primary.label}
               </Button>
               <Button href={`mailto:${site.contact.email}`} variant="onDark" size="lg">
                 Email Oria Digital

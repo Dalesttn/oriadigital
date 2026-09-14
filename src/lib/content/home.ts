@@ -1,26 +1,59 @@
 /** Content for the homepage sections that isn't shared with other routes. */
 
-/** The repeating system signature under the hero. */
+/** Trust bar — plain facts, no superlatives. */
+export const trustItems = [
+  "Perth based",
+  "10+ years web experience",
+  "WordPress specialist",
+  "Direct with the developer",
+  "Australia-wide support",
+] as const;
+
+/** Problem → outcome cards. Each names a pain and points at the fix. */
+export const problemCards = [
+  {
+    title: "Not getting enough enquiries?",
+    body: "Improve the website, the messaging, the conversion path and your search visibility.",
+    cta: { label: "Improve my website", href: "/website-optimisation-perth" },
+    event: "problem_card_click",
+  },
+  {
+    title: "Leads going cold?",
+    body: "Automatically follow up website enquiries by email, SMS or straight into your CRM.",
+    cta: { label: "Automate my follow-up", href: "/ai-automation-perth" },
+    event: "problem_card_click",
+  },
+  {
+    title: "Too much repetitive admin?",
+    body: "Connect forms, calendars, CRM tools and the everyday workflows you're doing by hand.",
+    cta: { label: "See automation options", href: "/ai-automation-perth" },
+    event: "problem_card_click",
+  },
+] as const;
+
+/**
+ * The customer journey — from search to booked customer. This is the core
+ * differentiator and appears on the homepage and every service page.
+ */
+export const journey = [
+  { label: "Get found", detail: "Search, maps, AI answers" },
+  { label: "Convert", detail: "A site that asks for the enquiry" },
+  { label: "Qualify", detail: "Right job, right area, right time", key: true },
+  { label: "Follow up", detail: "Email, SMS, CRM — automatically" },
+  { label: "Book", detail: "Straight into the calendar" },
+  { label: "Improve", detail: "Measured monthly, then changed" },
+] as const;
+
+/** The rail under the hero. */
 export const railSteps = [
+  { label: "Search" },
   { label: "Website" },
-  { label: "AI", on: true },
-  { label: "Qualify" },
-  { label: "Book" },
+  { label: "Enquiry" },
+  { label: "Qualify", on: true },
   { label: "Follow up" },
-  { label: "Improve" },
+  { label: "Booking" },
+  { label: "Review" },
 ] as const;
-
-/** Six jobs the system does. Each has a small hand-drawn-feel technical figure. */
-export const jobs = [
-  { no: "01", title: "Capture", body: "Never miss an enquiry.", fig: "peak" },
-  { no: "02", title: "Qualify", body: "Know what the customer actually needs.", fig: "branch" },
-  { no: "03", title: "Book", body: "Turn intent into appointments.", fig: "check" },
-  { no: "04", title: "Follow up", body: "Stop chasing customers.", fig: "dots" },
-  { no: "05", title: "Improve", body: "Keep increasing conversion.", fig: "trend" },
-  { no: "06", title: "Report", body: "Know what is working.", fig: "bars" },
-] as const;
-
-export type JobFig = (typeof jobs)[number]["fig"];
 
 /** AI demo tabs. Illustrations of the workflow, not real client conversations. */
 export const demos = [
@@ -62,7 +95,7 @@ export const demos = [
   },
 ] as const;
 
-/** The four-stage engagement model. Also emitted as HowTo-style steps. */
+/** The four-stage engagement model, used on /services. */
 export const processSteps = [
   {
     no: "01 · Free",
@@ -86,21 +119,26 @@ export const processSteps = [
   },
 ] as const;
 
-/** What the monthly subscription actually buys, month by month. */
-export const roadmap = [
-  { label: "Month 01", text: "Website + tracking" },
-  { label: "Month 02", text: "AI assistant" },
-  { label: "Month 03", text: "Follow-up automation" },
-  { label: "Month 04", text: "Conversion optimisation" },
-  { label: "Month 05", text: "SEO improvements" },
-] as const;
-
 /** Industries Oria Digital is built for. Feeds the audience section and schema. */
 export const audiences = [
-  { name: "Trades", body: "Plumbers, electricians, builders — enquiries that arrive at 9pm and need answering." },
-  { name: "Professional services", body: "Accountants, brokers, consultants — qualification before the first meeting." },
-  { name: "Clinics & allied health", body: "Physio, dental, allied health — bookings that land straight in the calendar." },
-  { name: "Wellness", body: "Studios, practitioners and directories — discovery, content and search visibility." },
-  { name: "Local businesses", body: "Anyone competing in the map pack and losing enquiries to slow replies." },
-  { name: "Small teams", body: "Two to twenty people, where admin quietly eats a day a week." },
+  { name: "Trades", body: "Plumbers, electricians, builders, renovators — enquiries that arrive at 9pm and need answering." },
+  { name: "Allied health & clinics", body: "Physio, chiro, podiatry, dental, medical — bookings that land straight in the calendar." },
+  { name: "Professional services", body: "Accountants, brokers, lawyers, consultants — qualification before the first meeting." },
+  { name: "Aged care & community", body: "Services where trust, clarity and accessibility on the website matter most." },
+  { name: "Local service businesses", body: "Anyone competing in the map pack and losing enquiries to slow replies." },
+  { name: "Small teams", body: "Two to thirty people, where admin quietly eats a day a week." },
+] as const;
+
+/** What the free audit reviews — the deliverable, stated so people can self-qualify. */
+export const auditChecklist = [
+  "Headline and positioning",
+  "Mobile experience",
+  "Calls to action",
+  "Loading speed",
+  "Technical SEO",
+  "Trust signals",
+  "Lead capture",
+  "Google visibility",
+  "Conversion issues",
+  "Automation opportunities",
 ] as const;

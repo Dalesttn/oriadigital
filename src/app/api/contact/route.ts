@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { contactSchema, concernLabel } from "@/lib/contact-schema";
+import { submissionSchema, toLeadRow, needLabel, auditProblemLabel } from "@/lib/contact-schema";
 import { site } from "@/lib/site";
 
 /**
- * Contact endpoint.
+ * Enquiry endpoint — both the contact form and the free website audit form.
  *
  * Three deliberate properties:
  *  - The server re-validates every field; the client's validation is a
@@ -14,7 +14,9 @@ import { site } from "@/lib/site";
  *    development before any keys exist.
  *  - Nothing secret ever reaches the browser: keys are read here only.
  *
- * TODO(launch): set RESEND_API_KEY and the Supabase vars in the environment.
+ * Attribution (UTMs, landing page, referrer) is stored alongside the lead in
+ * an `attribution` jsonb column. If that column doesn't exist yet, the insert
+ * is retried without it, so a schema lag never loses an enquiry.
  */
 
 export const runtime = "nodejs";
@@ -42,10 +44,7 @@ export async function POST(request: Request) {
     "unknown";
 
   if (rateLimited(ip)) {
-    return NextResponse.json(
-      { ok: false, error: "Too many requests. Please try again shortly." },
-      { status: 429 },
-    );
+    return NextResponse.json({ ok: false, error: "Too many requests. Please try again shortly." }, { status: 429 });
   }
 
   let body: unknown;
@@ -55,7 +54,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "Invalid request." }, { status: 400 });
   }
 
-  const parsed = contactSchema.safeParse(body);
+  const parsed = submissionSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
       {
@@ -70,10 +69,9 @@ export async function POST(request: Request) {
   const data = parsed.data;
 
   // Honeypot: accept silently so a bot learns nothing from the response.
-  if (data.company) {
-    return NextResponse.json({ ok: true });
-  }
+  if (data.company) return NextResponse.json({ ok: true });
 
+  const row = toLeadRow(data);
   const failures: string[] = [];
   /** Which services failed, by name. Returned to the caller; the reason is not. */
   const failedSinks: string[] = [];
@@ -84,18 +82,17 @@ export async function POST(request: Request) {
   if (supabaseUrl && supabaseKey) {
     try {
       const { createClient } = await import("@supabase/supabase-js");
-      const supabase = createClient(supabaseUrl, supabaseKey, {
-        auth: { persistSession: false },
-      });
-      const { error } = await supabase.from("leads").insert({
-        name: data.name,
-        business: data.business,
-        email: data.email,
-        website: data.website || null,
-        concern: data.concern,
-        message: data.message || null,
-        source: "website-contact-form",
-      });
+      const supabase = createClient(supabaseUrl, supabaseKey, { auth: { persistSession: false } });
+
+      let { error } = await supabase.from("leads").insert(row);
+      // Schema lag: the attribution column hasn't been added yet. Store the
+      // lead anyway — losing an enquiry over a missing column is the wrong trade.
+      if (error && /attribution/i.test(error.message)) {
+        const { attribution: _dropped, ...withoutAttribution } = row;
+        void _dropped;
+        console.warn("[contact] leads.attribution column missing — see INTEGRATIONS.md; inserting without it");
+        ({ error } = await supabase.from("leads").insert(withoutAttribution));
+      }
       if (error) {
         failures.push(`supabase: ${error.message}`);
         failedSinks.push("supabase");
@@ -114,20 +111,48 @@ export async function POST(request: Request) {
     try {
       const { Resend } = await import("resend");
       const resend = new Resend(resendKey);
+
+      const isAudit = data.source === "audit";
+      const subject = isAudit
+        ? `Free audit request — ${data.website}`
+        : `Enquiry: ${needLabel(data.need)} — ${data.name}`;
+
+      const lines = isAudit
+        ? [
+            `Name:      ${data.name}`,
+            `Email:     ${data.email}`,
+            `Website:   ${data.website}`,
+            `Problem:   ${auditProblemLabel(data.problem)}`,
+            `Phone:     ${data.phone || "—"}`,
+            `Business:  ${data.businessType || "—"}`,
+          ]
+        : [
+            `Name:      ${data.name}`,
+            `Email:     ${data.email}`,
+            `Website:   ${data.website || "—"}`,
+            `Needs:     ${needLabel(data.need)}`,
+            `Budget:    ${data.budget || "—"}`,
+            "",
+            data.message || "(no message)",
+          ];
+
+      const a = data.attribution;
+      if (a && Object.keys(a).length) {
+        lines.push(
+          "",
+          "— Attribution —",
+          ...Object.entries(a)
+            .filter(([, v]) => v)
+            .map(([k, v]) => `${k}: ${v}`),
+        );
+      }
+
       const { error } = await resend.emails.send({
         from: notifyFrom,
         to: notifyTo,
         replyTo: data.email,
-        subject: `Audit request — ${data.business}`,
-        text: [
-          `Name:     ${data.name}`,
-          `Business: ${data.business}`,
-          `Email:    ${data.email}`,
-          `Website:  ${data.website || "—"}`,
-          `Needs:    ${concernLabel(data.concern)}`,
-          "",
-          data.message || "(no message)",
-        ].join("\n"),
+        subject,
+        text: lines.join("\n"),
       });
       if (error) {
         failures.push(`resend: ${error.message}`);
@@ -142,10 +167,8 @@ export async function POST(request: Request) {
   if (failures.length) {
     console.error("[contact] delivery failures:", failures.join(" | "));
     // A configured sink failed — say so rather than showing a false success.
-    //
-    // `sink` names which service broke but never why. Naming the service makes
-    // a production failure diagnosable without shell access to the logs; the
-    // underlying message can carry connection strings and is kept server-side.
+    // `sink` names which service broke but never why; the underlying message
+    // can carry connection strings and is kept server-side.
     return NextResponse.json(
       {
         ok: false,
@@ -158,7 +181,7 @@ export async function POST(request: Request) {
 
   if (!supabaseUrl && !resendKey) {
     // No sink configured yet: log so local development still shows the payload.
-    console.info("[contact] no delivery configured; enquiry received:", data);
+    console.info("[contact] no delivery configured; enquiry received:", row);
   }
 
   return NextResponse.json({ ok: true });

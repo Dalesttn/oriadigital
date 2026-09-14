@@ -32,6 +32,20 @@ const nextConfig = {
     minimumCacheTTL: 31_536_000,
   },
 
+  /**
+   * Permanent redirects from the original /services/* URLs to the Perth
+   * commercial pages. Mirrors `legacyRedirects` in src/lib/nav.ts; kept
+   * literal here because this file is plain JS loaded before the TS graph.
+   */
+  async redirects() {
+    return [
+      { source: "/services/websites", destination: "/web-design-perth", permanent: true },
+      { source: "/services/optimisation", destination: "/website-optimisation-perth", permanent: true },
+      { source: "/services/ai-automation", destination: "/ai-automation-perth", permanent: true },
+      { source: "/services/website-care", destination: "/website-maintenance-perth", permanent: true },
+    ];
+  },
+
   async headers() {
     return [
       {

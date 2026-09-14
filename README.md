@@ -31,26 +31,43 @@ npx tsc --noEmit             # typecheck
 ```
 src/
   app/
-    layout.tsx            root shell, fonts, sitewide JSON-LD entity graph
-    page.tsx              homepage
-    services/             index + [slug] (websites, ai-automation, optimisation, website-care)
-    work/ about/ pricing/ faq/ contact/ privacy/ terms/
-    api/contact/          POST endpoint: validate → Supabase → Resend
-    og/                   generated Open Graph card (title from query string)
+    layout.tsx                  root shell, fonts, sitewide JSON-LD entity graph
+    page.tsx                    homepage (brief §5/§37 order)
+    web-design-perth/           ┐
+    wordpress-support-perth/    │ commercial service pages — thin wrappers
+    website-optimisation-perth/ │ around components/pages/ServicePage.tsx;
+    ai-automation-perth/        │ content in lib/content/services.ts
+    website-maintenance-perth/  │
+    wordpress-developer-perth/  ┘
+    services/                   hub
+    free-website-audit/         the primary conversion
+    answers/ + [slug]           question-led articles (lib/content/answers.ts)
+    work/ + oria-haven/         work index + flagship case study
+    about/ pricing/ faq/ contact/ privacy/ terms/
+    api/contact/                POST: validate → Supabase → Resend (both forms)
+    og/                         generated Open Graph card (title from query string)
     sitemap.ts robots.ts manifest.ts llms.txt/
   components/
-    layout/               header, footer, breadcrumbs, sticky mobile CTA
-    sections/             homepage and shared page sections
-    ui/                   button, section heads, FAQ, image slot, reveal observer
-                          OriaMark.tsx — the logo: mark, lockup, gradient defs
-    seo/                  JSON-LD renderer
+    layout/                     header (with Services dropdown), footer, breadcrumbs, sticky mobile CTA
+    pages/ServicePage.tsx       the service-page template
+    sections/                   hero, trust bar, problem cards, journey, services grid,
+                                entry offers, case study, founder, AI demo, forms, CTA
+    ui/                         button, section heads, FAQ, image slot, mark/lockup,
+                                SiteRuntime (attribution + click tracking + reveals)
+    seo/                        JSON-LD renderer
   lib/
-    site.ts               ← every business fact lives here
-    nav.ts                route table (drives nav, footer and sitemap)
-    seo.ts                metadata builder
-    schema.ts             structured-data builders
-    content/              services, pricing, faqs, homepage content
+    site.ts                     ← every business fact lives here
+    nav.ts                      route table + the one primary CTA + legacy redirects
+    seo.ts                      metadata builder
+    schema.ts                   structured-data builders
+    analytics.ts                GA4 event vocabulary + track()
+    attribution.ts              first-touch UTM / landing / referrer capture
+    contact-schema.ts           zod contracts for both forms → leads row
+    content/                    services, pricing, faqs, answers, work, homepage
 ```
+
+**Redirects:** the original `/services/*` URLs 308 to the Perth pages —
+defined in `next.config.mjs`, mirrored in `nav.ts`.
 
 ## The mark
 
@@ -100,12 +117,22 @@ business resolves as a single entity rather than a repeated string:
 | `Organization` + `ProfessionalService` | every page (root layout) |
 | `WebSite`, `Person` (founder) | every page |
 | `WebPage`, `BreadcrumbList` | every page |
-| `Service` + `OfferCatalog` | homepage, `/services`, each service page |
-| `Product` + `AggregateOffer` | homepage, `/pricing` |
-| `FAQPage` | homepage, `/faq`, `/pricing`, `/about`, service pages |
-| `HowTo` | homepage (the four-stage process) |
-| `CreativeWork` | `/work` (Oria Haven) |
-| `ContactPage` + free-audit `Offer` | `/contact` |
+| `Service` + `OfferCatalog` + per-option `Offer` | homepage, `/services`, each service page |
+| `Product` + `AggregateOffer` (every offer) | `/pricing` |
+| `Offer` (entry offers, free audit) | homepage, `/free-website-audit` |
+| `FAQPage` | homepage, `/faq`, `/pricing`, `/about`, service pages, articles |
+| `HowTo` (the process) | each service page |
+| `Article` | each `/answers/*` article |
+| `CreativeWork` | `/work/oria-haven` |
+| `ItemList` / `CollectionPage` | `/services`, `/work`, `/answers` |
+| `ContactPage` | `/contact` |
+
+**Conversion tracking** — GA4 events are fired by one delegated click
+listener (`SiteRuntime.tsx`): any element with `data-track="event"` reports
+that event; `tel:` and `mailto:` links report automatically. Form submissions
+fire `audit_form_submit` / `contact_form_submit`. The vocabulary is in
+`lib/analytics.ts` and matches the brief. First-touch attribution (UTMs,
+landing page, referrer) is captured on landing and stored with each lead.
 
 **GEO / AEO** — the parts that decide whether an AI answer cites you:
 

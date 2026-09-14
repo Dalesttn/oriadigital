@@ -12,6 +12,8 @@ export const site = {
   name: "Oria Digital",
   legalName: "Oria Digital", // PLACEHOLDER — registered trading/company name
   tagline: "Web. AI. Automation.",
+  /** The positioning line. Outcomes before technology. */
+  positioning: "One person. One system. From search to booked customer.",
   /** Canonical origin. No trailing slash. */
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://oriadigital.com.au",
   locale: "en_AU",
@@ -19,21 +21,34 @@ export const site = {
   currency: "AUD",
 
   description:
-    "Oria Digital helps Australian businesses build better websites, capture more enquiries and automate repetitive work with practical web, AI and automation systems.",
+    "Web design and AI automation for Perth businesses. Oria Digital builds conversion-focused websites, WordPress solutions and automated lead systems for trades, clinics and service businesses in Perth and across Australia.",
 
   /** One-sentence entity definition. Used in JSON-LD and llms.txt — the string
    *  an AI assistant is most likely to quote when asked "what is Oria Digital". */
   definition:
-    "Oria Digital is an independent Perth-based digital studio that builds websites, AI assistants and business automation as one connected system for Australian small businesses.",
+    "Oria Digital is a Perth web design and AI automation studio run by developer Dale Sutton. It builds conversion-focused websites, supports and fixes WordPress sites, and automates enquiry follow-up so Perth service businesses turn more visitors into booked customers.",
 
   founder: {
     name: "Dale Sutton",
     /** Used in first-person copy, where the surname would read as stiff. */
     firstName: "Dale",
-    jobTitle: "Founder & Digital Systems Consultant",
-    /** Short first-person bio used in Person schema and the About page. */
+    jobTitle: "Founder & Web Developer",
+    /** Stated plainly and reused wherever credibility is established. */
+    experience: "10+ years",
+    /** Short bio used in Person schema and the About page. */
     bio:
-      "Dale is the founder of Oria Digital, an independent studio covering web development, digital strategy, IT, AI and automation for Australian small businesses.",
+      "Dale Sutton is a Perth-based web developer with more than a decade of experience building and supporting websites for businesses across multiple industries. He runs Oria Digital, covering web design, WordPress development, website optimisation, SEO and AI automation.",
+    skills: [
+      "WordPress",
+      "PHP",
+      "Webflow",
+      "WooCommerce",
+      "UX",
+      "SEO",
+      "Analytics",
+      "Automation",
+      "AI workflows",
+    ],
     sameAs: ["https://www.linkedin.com/in/dale-michael-sutton/"] as string[],
     image: "/team/dale-sutton.jpg",
   },
@@ -57,6 +72,7 @@ export const site = {
   /** Geographic coverage. Drives LocalBusiness / ProfessionalService areaServed. */
   serviceArea: {
     primary: "Perth, Western Australia",
+    state: "Western Australia",
     secondary: "Australia",
     suburbs: [
       "Perth CBD",

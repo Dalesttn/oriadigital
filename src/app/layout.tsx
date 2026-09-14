@@ -6,7 +6,7 @@ import "./globals.css";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { MobileCta } from "@/components/layout/MobileCta";
-import { RevealObserver } from "@/components/ui/Reveal";
+import { SiteRuntime } from "@/components/ui/SiteRuntime";
 import { OriaGradientDefs } from "@/components/ui/OriaMark";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { graph, organizationSchema, websiteSchema, personSchema } from "@/lib/schema";
@@ -96,7 +96,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="main">{children}</main>
         <SiteFooter />
         <MobileCta />
-        <RevealObserver />
+        <SiteRuntime />
 
         {site.analytics.ga4Id && (
           <>

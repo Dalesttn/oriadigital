@@ -59,11 +59,14 @@ export function Button({
   const isExternal = /^(https?:|mailto:|tel:)/.test(href);
 
   if (isExternal) {
+    // `rest` carries data-track and aria attributes; they belong on the anchor too.
+    const anchorProps = rest as unknown as React.AnchorHTMLAttributes<HTMLAnchorElement>;
     return (
       <a
         href={href}
         className={classes}
         {...(href.startsWith("http") ? { rel: "noopener", target: "_blank" } : {})}
+        {...anchorProps}
       >
         {content}
       </a>

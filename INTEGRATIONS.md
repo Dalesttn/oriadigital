@@ -40,7 +40,10 @@ create table public.leads (
   website     text,
   concern     text not null,
   message     text,
-  source      text not null default 'website-contact-form'
+  source      text not null default 'website-contact-form',
+  -- First-touch attribution: UTMs, landing page, referrer. Captured
+  -- client-side on the visitor's first page and sent with the enquiry.
+  attribution jsonb
 );
 
 -- Newest first, which is the only way you will ever read this table.
@@ -48,6 +51,18 @@ create index leads_created_at_idx on public.leads (created_at desc);
 
 alter table public.leads enable row level security;
 ```
+
+**Already created the table without `attribution`?** Run this once:
+
+```sql
+alter table public.leads add column if not exists attribution jsonb;
+```
+
+Until you do, the endpoint notices the missing column, logs a warning, and
+inserts the lead without it — so nothing is lost, you just don't get the
+attribution data. Both forms (`/contact` and `/free-website-audit`) write to
+this one table; `source` says which, and the audit's "biggest problem" lands
+in `concern` as `audit:<value>`.
 
 **Row Level Security is on with no policies, and that is correct.** The server
 inserts using the service-role key, which bypasses RLS. Anonymous clients get

@@ -1,101 +1,195 @@
 /**
- * Pricing content. Feeds the pricing section, the /pricing page and the
- * Offer / AggregateOffer JSON-LD — one set of numbers, one place to change it.
+ * Pricing — the ladder from the growth brief: an entry rung that costs less
+ * than a tank of fuel, project work, then recurring plans.
  *
- * All prices exclude GST and are stated in AUD, matching the copy on the page.
+ * One set of numbers, one place to change them. Feeds the pricing page, the
+ * entry-offer sections, the service pages and the Offer JSON-LD. All prices
+ * are AUD and exclude GST, matching the copy on the page.
  */
 
-export type Plan = {
+export type Offer = {
   slug: string;
-  kicker: string;
   name: string;
   price: number;
-  priceSuffix: string;
-  /** Extra reassurance line under the price, plan-specific. */
-  priceNote?: string;
+  /** "from", or empty for a fixed price. */
+  qualifier?: "from";
+  /** "/month" for recurring. */
+  unit?: "/month";
   summary: string;
-  features: string[];
+  /** What you get. Short, scannable. */
+  includes: string[];
+  /** Who it suits. */
   bestFor: string;
-  cta: string;
+  cta: { label: string; href: string };
+  /** GA4 event fired on CTA click. */
+  event?: string;
   featured?: boolean;
 };
 
-export const plans: Plan[] = [
+/** Entry offers — the low-risk first step. */
+export const entryOffers: Offer[] = [
   {
-    slug: "oria-care",
-    kicker: "Care",
-    name: "Oria Care",
-    price: 249,
-    priceSuffix: "per month · ex GST",
-    summary: "Keep everything secure, maintained and running.",
-    features: [
-      "Managed hosting, SSL & backups",
-      "Security monitoring & updates",
-      "Uptime monitoring",
-      "Small content changes",
-      "Monthly health check & reporting",
+    slug: "wordpress-sos",
+    name: "WordPress SOS",
+    price: 149,
+    qualifier: "from",
+    summary: "One small WordPress problem, fixed. No rebuild required.",
+    includes: [
+      "Broken layouts and Elementor problems",
+      "Contact forms not sending",
+      "Mobile display issues",
+      "Plugin conflicts and update fallout",
+      "CSS and styling problems",
+      "Speed issues and minor WooCommerce faults",
     ],
-    bestFor: "a good website that doesn't need automation yet.",
-    cta: "Choose Care",
+    bestFor: "a site that mostly works but has one thing wrong with it.",
+    cta: { label: "Get WordPress Help", href: "/contact?need=wordpress" },
+    event: "wordpress_sos_click",
   },
   {
-    slug: "oria-grow",
-    kicker: "Grow",
-    name: "Oria Grow",
-    price: 499,
-    priceSuffix: "per month · ex GST",
-    priceNote: "about $16 a day",
-    summary: "Your website doesn't just sit there. It captures, qualifies and follows up.",
-    features: [
-      "Everything in Care",
-      "AI website assistant",
-      "Lead capture & qualification",
-      "Automated follow-ups & review requests",
-      "CRM & booking integration",
-      "Missed-call follow-up",
-      "Monthly conversion review & SEO monitoring",
-      "Up to 2 hours of improvement work a month",
+    slug: "website-tune-up",
+    name: "Website Tune-Up",
+    price: 299,
+    qualifier: "from",
+    summary: "A review of the biggest issues affecting conversions, speed and SEO — and the top ones fixed.",
+    includes: [
+      "Website review across conversions, mobile, speed, SEO and CTAs",
+      "Prioritised recommendations, ranked by impact",
+      "Up to 2 hours of fixes on the highest-priority items",
+      "Before/after summary",
+      "Optional next-step roadmap",
     ],
-    bestFor: "trades, professional services, clinics and local businesses with regular enquiries.",
-    cta: "Choose Grow",
+    bestFor: "a site that's fine but isn't producing enquiries.",
+    cta: { label: "Book a Website Tune-Up", href: "/contact?need=improve" },
+    event: "tuneup_click",
     featured: true,
-  },
-  {
-    slug: "oria-system",
-    kicker: "System",
-    name: "Oria System",
-    price: 899,
-    priceSuffix: "per month · ex GST",
-    summary: "Your digital operations partner, not just your website.",
-    features: [
-      "Everything in Grow",
-      "Advanced assistant & multiple workflows",
-      "Quote, lead & appointment automation",
-      "Internal business automation",
-      "Reporting dashboard",
-      "Monthly strategy session & priority support",
-      "Up to 4 hours of improvement work a month",
-    ],
-    bestFor: "enough enquiry volume and admin for automation to pay for itself.",
-    cta: "Choose System",
   },
 ];
 
-/** One-off setup work. Quoted after the free audit. */
-export const setup = {
-  name: "Digital System Setup",
-  priceFrom: 3500,
-  summary:
-    "Build or improve the website and install the highest-value parts of the system. Scoped and quoted after the audit.",
-  lines: [
-    { label: "Website", price: "$3,500+" },
-    { label: "Website + conversion system", price: "$5,000+" },
-    { label: "AI enquiry assistant", price: "$1,500+" },
-    { label: "Basic automation", price: "$1,500+" },
-    { label: "Multi-step automation", price: "$2,500–$5,000+" },
-    { label: "Full digital system", price: "$5,000–$10,000+" },
-  ],
-} as const;
+/** Project work — one-off builds. */
+export const projectOffers: Offer[] = [
+  {
+    slug: "website-build",
+    name: "Website Build",
+    price: 3500,
+    qualifier: "from",
+    summary: "A small-business website built around the enquiry.",
+    includes: [
+      "Strategy, structure and copy direction",
+      "Custom design, mobile first",
+      "WordPress or Next.js build",
+      "Forms wired to your inbox, CRM or calendar",
+      "Technical SEO and analytics from day one",
+    ],
+    bestFor: "trades, clinics and service businesses that need a site that converts.",
+    cta: { label: "Get a Website Quote", href: "/contact?need=new" },
+    event: "pricing_cta_click",
+    featured: true,
+  },
+  {
+    slug: "advanced-website",
+    name: "Advanced Website",
+    price: 6500,
+    qualifier: "from",
+    summary: "For custom functionality, integrations or a larger content architecture.",
+    includes: [
+      "Everything in Website Build",
+      "Custom post types, directories or member areas",
+      "Integrations with booking, CRM or payment systems",
+      "Larger content and landing-page architecture",
+      "Performance budget and monitoring",
+    ],
+    bestFor: "businesses with real functional requirements, not just pages.",
+    cta: { label: "Discuss a Project", href: "/contact?need=new" },
+    event: "pricing_cta_click",
+  },
+  {
+    slug: "ai-assistant",
+    name: "AI Assistant",
+    price: 1500,
+    qualifier: "from",
+    summary: "A lead qualification or customer support assistant, installed and tuned.",
+    includes: [
+      "Trained only on your services, prices and rules",
+      "Service-area and urgency qualification",
+      "Hand-over rules and readable transcripts",
+      "Connected to your CRM or calendar",
+      "Tuned together over the first weeks",
+    ],
+    bestFor: "businesses fielding the same questions after hours.",
+    cta: { label: "Discuss Automation", href: "/contact?need=ai" },
+    event: "pricing_cta_click",
+  },
+  {
+    slug: "automation-project",
+    name: "Automation Project",
+    price: 2500,
+    qualifier: "from",
+    summary: "Custom workflow automation across the tools you already use.",
+    includes: [
+      "Enquiry → CRM → calendar → confirmation, end to end",
+      "Follow-up sequences by email and SMS",
+      "Missed-call text-back",
+      "Quote, reminder and review-request workflows",
+      "Monitoring so you know when something stops",
+    ],
+    bestFor: "businesses retyping the same information into three systems.",
+    cta: { label: "Discuss Automation", href: "/contact?need=ai" },
+    event: "pricing_cta_click",
+  },
+];
+
+/** Recurring plans. */
+export const recurringOffers: Offer[] = [
+  {
+    slug: "website-care",
+    name: "Website Care",
+    price: 249,
+    qualifier: "from",
+    unit: "/month",
+    summary: "Keep everything secure, maintained and running.",
+    includes: [
+      "Managed hosting, SSL and daily backups",
+      "Security monitoring and updates",
+      "Uptime monitoring",
+      "Small content changes",
+      "Monthly health check and report",
+    ],
+    bestFor: "a good website that needs looking after.",
+    cta: { label: "Choose Website Care", href: "/contact?need=care" },
+    event: "pricing_cta_click",
+  },
+  {
+    slug: "growth-optimisation",
+    name: "Growth + Optimisation",
+    price: 499,
+    qualifier: "from",
+    unit: "/month",
+    summary: "Your website doesn't just sit there. It gets measured and improved every month.",
+    includes: [
+      "Everything in Website Care",
+      "Analytics review and conversion optimisation",
+      "SEO improvements and new landing pages",
+      "AI assistant and follow-up automation, where installed",
+      "Automation monitoring",
+      "Monthly report and up to 2 hours of improvement work",
+    ],
+    bestFor: "businesses with regular enquiries who want more of them.",
+    cta: { label: "Choose Growth", href: "/contact?need=care" },
+    event: "pricing_cta_click",
+    featured: true,
+  },
+];
+
+/** WordPress support tiers — the table from the brief, verbatim. */
+export const wordpressTiers = [
+  { name: "Quick Fix", price: "$149", scope: "One small WordPress issue" },
+  { name: "Website Tune-Up", price: "$299", scope: "Audit + priority fixes" },
+  { name: "Half-Day Support", price: "$495", scope: "Up to 4 hours" },
+  { name: "Monthly Care", price: "$249+ / month", scope: "Maintenance + support" },
+] as const;
 
 export const pricingDisclaimer =
-  "All prices ex GST. Grow and System have a three-month minimum term, then continue month to month. Work beyond the included hours is $150/hour or quoted separately. Final pricing depends on scope and requirements.";
+  "All prices exclude GST. Entry offers are fixed. Project work is fixed-quoted in writing after the free audit. Growth + Optimisation has a three-month minimum term, then continues month to month. Work beyond a plan's included hours is $150/hour or quoted separately.";
+
+export const allOffers = [...entryOffers, ...projectOffers, ...recurringOffers];
