@@ -77,7 +77,15 @@ function Section({ s }: { s: ArticleSection }) {
             {s.rows.map((row, i) => (
               <tr key={i}>
                 {row.map((cell, j) => (
-                  <td key={j}>{cell}</td>
+                  // Prices get nowrap + tabular figures; prose never does.
+                  <td
+                    key={j}
+                    className={
+                      j === 0 ? "lead" : /^(from )?\$[\d,]/.test(cell) || /^\d+(–\d+)?%/.test(cell) ? "price" : undefined
+                    }
+                  >
+                    {cell}
+                  </td>
                 ))}
               </tr>
             ))}

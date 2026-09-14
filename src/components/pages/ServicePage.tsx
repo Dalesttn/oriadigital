@@ -131,8 +131,8 @@ export function ServicePage({ slug }: { slug: string }) {
             <tbody>
               {s.pricing.map((p) => (
                 <tr key={p.label}>
-                  <td style={{ fontWeight: 700 }}>{p.label}</td>
-                  <td>{p.price}</td>
+                  <td className="lead">{p.label}</td>
+                  <td className="price">{p.price}</td>
                   <td>{p.note}</td>
                 </tr>
               ))}

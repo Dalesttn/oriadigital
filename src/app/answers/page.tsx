@@ -55,7 +55,7 @@ export default function AnswersPage() {
         </AnswerBlock>
       </section>
 
-      <section className="wrap" style={{ paddingTop: "clamp(40px,5vw,72px)", paddingBottom: "clamp(40px,5vw,72px)" }} aria-labelledby="published-h">
+      <section className="wrap" style={{ paddingTop: "clamp(40px,5vw,72px)", paddingBottom: "var(--sec)" }} aria-labelledby="published-h">
         <h2 id="published-h" className="label" style={{ marginBottom: 18 }}>Published</h2>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,320px),1fr))", gap: 18 }}>
           {articles.map((a) => (
@@ -70,6 +70,7 @@ export default function AnswersPage() {
         </div>
       </section>
 
+      {plannedQuestions.length > 0 && (
       <section className="wrap" style={{ paddingBottom: "var(--sec)" }} aria-labelledby="coming-h">
         <h2 id="coming-h" className="label" style={{ marginBottom: 18 }}>Coming next</h2>
         <ul style={{ listStyle: "none", margin: 0, padding: 0, columns: 2, columnGap: 32, borderTop: "1px solid var(--hairline)" }}>
@@ -84,6 +85,7 @@ export default function AnswersPage() {
           is faster than the article.
         </p>
       </section>
+      )}
 
       <FinalCta />
     </>

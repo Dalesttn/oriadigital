@@ -59,7 +59,7 @@ export function SiteHeader() {
   const isCurrent = (href: string) =>
     href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
   const inServices =
-    pathname === "/services" || serviceRoutes.some((r) => pathname === r.href) || pathname === "/wordpress-developer-perth";
+    pathname === "/services" || serviceRoutes.some((r) => pathname === r.href) || /-perth$/.test(pathname);
 
   return (
     <div className="navwrap" {...(stuck ? { "data-stuck": "" } : {})}>

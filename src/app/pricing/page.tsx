@@ -107,8 +107,8 @@ export default function PricingPage() {
             <tbody>
               {wordpressTiers.map((t) => (
                 <tr key={t.name}>
-                  <td style={{ fontWeight: 700 }}>{t.name}</td>
-                  <td>{t.price}</td>
+                  <td className="lead">{t.name}</td>
+                  <td className="price">{t.price}</td>
                   <td>{t.scope}</td>
                 </tr>
               ))}

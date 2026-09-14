@@ -29,6 +29,9 @@ export const routes: Route[] = [
   { href: "/website-maintenance-perth", label: "Website Care", priority: 0.8, changeFrequency: "monthly", service: true },
   // In the WordPress cluster and sitemap, but not the Services dropdown (§33).
   { href: "/wordpress-developer-perth", label: "WordPress Developer", priority: 0.8, changeFrequency: "monthly" },
+  { href: "/website-speed-optimisation-perth", label: "Speed Optimisation", priority: 0.8, changeFrequency: "monthly" },
+  { href: "/small-business-web-design-perth", label: "Small Business Web Design", priority: 0.8, changeFrequency: "monthly" },
+  { href: "/local-seo-perth", label: "Local SEO", priority: 0.8, changeFrequency: "monthly" },
   { href: "/work", label: "Work", priority: 0.7, changeFrequency: "monthly", primary: true },
   { href: "/work/oria-haven", label: "Oria Haven case study", priority: 0.7, changeFrequency: "monthly" },
   { href: "/answers", label: "Answers", priority: 0.8, changeFrequency: "weekly", primary: true },

@@ -394,10 +394,15 @@
   .tbl tr:last-child td {
     border-bottom: 0;
   }
-  .tbl td:nth-child(2) {
+  /* Opt-in for price cells only. A prose column must never be nowrap. */
+  .tbl td.price {
     white-space: nowrap;
     font-weight: 700;
     font-feature-settings: "tnum";
+  }
+  .tbl td.lead {
+    font-weight: 700;
+    min-width: 9ch;
   }
   .tbl-note {
     margin-top: 10px;

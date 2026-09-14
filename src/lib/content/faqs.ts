@@ -84,6 +84,11 @@ export const faqs: Faq[] = [
     a: "Almost always one of four causes: too many plugins doing overlapping work, images uploaded at full camera size, a heavy page-builder theme loading scripts on every page, or cheap shared hosting. Less often it's an unoptimised database or an external script. The fix is diagnosis first — measuring what actually loads — rather than installing a caching plugin and hoping.",
   },
   {
+    topic: "websites",
+    q: "Does website speed affect Google rankings?",
+    a: "Yes, directly and indirectly. Core Web Vitals are a confirmed Google ranking signal, so a site that fails them is at a disadvantage against one that passes. The bigger effect is indirect: slow pages lose visitors before they load, and lost visitors mean fewer enquiries and weaker engagement signals. Fixing speed is usually the highest-return technical SEO work on a small-business site.",
+  },
+  {
     topic: "wordpress",
     q: "How often should a WordPress website be maintained?",
     a: "Core, theme and plugin updates should be checked at least fortnightly and applied within a few days of a security release. Backups should run daily and be tested at least quarterly. Uptime and speed should be monitored continuously. That's what a website care plan does, so it happens on a schedule instead of when something breaks.",

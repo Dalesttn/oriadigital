@@ -109,9 +109,9 @@ export const services: Service[] = [
       "Should I rebuild my website or improve it?",
     ],
     related: [
-      { href: "/website-optimisation-perth", label: "Website Optimisation" },
-      { href: "/wordpress-developer-perth", label: "WordPress Developer" },
+      { href: "/small-business-web-design-perth", label: "Small Business Web Design" },
       { href: "/answers/how-much-does-a-website-cost-in-perth", label: "How much does a website cost in Perth?" },
+      { href: "/answers/wordpress-vs-webflow-for-small-businesses", label: "WordPress vs Webflow" },
       { href: "/work/oria-haven", label: "Oria Haven case study" },
     ],
     keywords: [
@@ -179,6 +179,8 @@ export const services: Service[] = [
     ],
     related: [
       { href: "/wordpress-developer-perth", label: "WordPress Developer" },
+      { href: "/answers/why-is-my-wordpress-website-so-slow", label: "Why is my WordPress website so slow?" },
+      { href: "/answers/how-much-does-wordpress-support-cost", label: "How much does WordPress support cost?" },
       { href: "/website-maintenance-perth", label: "Website Care plans" },
       { href: "/website-optimisation-perth", label: "Website Optimisation" },
       { href: "/answers", label: "Answers" },
@@ -248,8 +250,9 @@ export const services: Service[] = [
     related: [
       { href: "/web-design-perth", label: "Web Design" },
       { href: "/wordpress-support-perth", label: "WordPress Support" },
-      { href: "/website-maintenance-perth", label: "Website Care" },
-      { href: "/answers", label: "Answers" },
+      { href: "/website-speed-optimisation-perth", label: "Speed Optimisation" },
+      { href: "/answers/why-is-my-website-getting-traffic-but-no-enquiries", label: "Traffic but no enquiries?" },
+      { href: "/answers/how-to-improve-website-conversion-rates", label: "How to improve conversion rates" },
     ],
     keywords: [
       "website optimisation Perth",
@@ -313,8 +316,9 @@ export const services: Service[] = [
     ],
     related: [
       { href: "/web-design-perth", label: "Web Design" },
-      { href: "/website-maintenance-perth", label: "Website Care" },
-      { href: "/answers", label: "Answers" },
+      { href: "/answers/how-much-does-ai-automation-cost-for-a-small-business", label: "How much does AI automation cost?" },
+      { href: "/answers/can-ai-automatically-follow-up-website-leads", label: "Can AI follow up leads automatically?" },
+      { href: "/answers/how-can-ai-help-a-plumbing-business", label: "How can AI help a plumbing business?" },
       { href: "/work", label: "Automation prototypes" },
     ],
     keywords: [
@@ -376,8 +380,8 @@ export const services: Service[] = [
     related: [
       { href: "/wordpress-support-perth", label: "WordPress Support" },
       { href: "/website-optimisation-perth", label: "Website Optimisation" },
-      { href: "/pricing", label: "Pricing" },
-      { href: "/answers", label: "Answers" },
+      { href: "/answers/what-does-a-website-maintenance-plan-include", label: "What does a maintenance plan include?" },
+      { href: "/answers/why-is-my-wordpress-website-so-slow", label: "Why is my WordPress website so slow?" },
     ],
     keywords: [
       "website maintenance Perth",
@@ -451,6 +455,202 @@ export const services: Service[] = [
     ],
     showSos: true,
   },
+
+  // ── §13 supporting pages. Not in the Services dropdown; in the clusters,
+  //    the sitemap and the footer via nav.ts. ──────────────────────────────
+  {
+    slug: "website-speed-optimisation-perth",
+    name: "Speed Optimisation",
+    serviceType: "Website Speed Optimisation",
+    title: "Website Speed Optimisation Perth | Fix Slow Sites & Core Web Vitals",
+    h1: "Website speed optimisation",
+    h1Tail: "that shows in the numbers.",
+    eyebrow: "Speed optimisation Perth",
+    answer:
+      "Oria Digital makes slow websites fast — measured against Google's Core Web Vitals field data, not a lab score. Images, fonts, scripts, caching, hosting and plugin bloat are diagnosed first and fixed in priority order, with a before-and-after report. Most WordPress sites can be fixed without a rebuild, from $299 + GST.",
+    summary: "Fix a slow site, measured against real Core Web Vitals.",
+    cardCta: "Fix My Slow Site",
+    cta: { label: "Book a Speed Tune-Up", href: "/contact?need=improve" },
+    problems: [
+      "The site takes four, five, six seconds to show anything on a phone",
+      "Search Console says the site fails Core Web Vitals",
+      "PageSpeed Insights is red and nobody can explain why",
+      "A caching plugin was installed and nothing changed",
+      "The homepage is fine but every inner page crawls",
+      "Google Ads landing pages are slow and the cost per click shows it",
+    ],
+    includes: [
+      "Diagnosis against CrUX field data — what real visitors experience, not a lab run",
+      "Image audit: sizing, format (WebP/AVIF), lazy loading, the one hero image that costs a second",
+      "Font loading: self-hosting, subsetting, display strategy — usually the cheapest big win",
+      "Script audit: what loads on every page and whether it needs to",
+      "Plugin review: overlapping plugins, abandoned plugins, plugins doing what the theme already does",
+      "Caching and hosting configuration, or a plain recommendation to move",
+      "Largest Contentful Paint, Cumulative Layout Shift and Interaction to Next Paint, each addressed specifically",
+      "A written before-and-after with the numbers, so you can see what changed",
+    ],
+    pricing: [
+      { label: "Speed Tune-Up", price: "$299", note: "Diagnosis, prioritised fixes, up to 2 hours, before/after report" },
+      { label: "Speed project", price: "from $899 + GST", note: "Deeper work: theme rebuild of critical pages, hosting migration, asset pipeline" },
+      { label: "Growth + Optimisation", price: "from $499/month", note: "Speed monitored and maintained, with monthly reporting" },
+    ],
+    priceFrom: 299,
+    priceNote: "Every speed job starts with measurement. If the honest answer is that the theme or host is the problem, you're told that before you spend anything.",
+    process: [
+      { title: "Measure", body: "Field data from Google, lab data from Lighthouse, and a waterfall of what actually loads. The three usually disagree, and the disagreement is the diagnosis." },
+      { title: "Prioritise", body: "The fixes ranked by seconds saved per hour of work. Fonts and images are almost always first." },
+      { title: "Fix", body: "On staging where risky, live where not. Each change measured on its own so you know what worked." },
+      { title: "Report", body: "Before-and-after, in plain numbers. Then a watch on it, so it doesn't drift back." },
+    ],
+    faqQuestions: [
+      "Why is my WordPress website slow?",
+      "Does website speed affect Google rankings?",
+      "Should I rebuild my website or improve it?",
+    ],
+    related: [
+      { href: "/website-optimisation-perth", label: "Website Optimisation" },
+      { href: "/wordpress-support-perth", label: "WordPress Support" },
+      { href: "/answers/why-is-my-wordpress-website-so-slow", label: "Why is my WordPress website so slow?" },
+      { href: "/website-maintenance-perth", label: "Website Care" },
+    ],
+    keywords: [
+      "website speed optimisation Perth",
+      "slow website fix Perth",
+      "Core Web Vitals Perth",
+      "WordPress speed optimisation",
+      "PageSpeed optimisation Perth",
+    ],
+    showTuneUp: true,
+  },
+  {
+    slug: "small-business-web-design-perth",
+    name: "Small Business Web Design",
+    serviceType: "Small Business Web Design",
+    title: "Small Business Web Design Perth | Websites That Pay For Themselves",
+    h1: "Small business web design in Perth,",
+    h1Tail: "priced for small business.",
+    eyebrow: "Small business web design Perth",
+    answer:
+      "Oria Digital builds websites for Perth small businesses — sole traders, trades, clinics and two-to-thirty-person firms — around the one thing the site has to do: produce enquiries. A conversion-focused site with technical SEO, tracking and forms wired to your inbox, from $3,500 + GST, with a fixed quote and no surprises.",
+    summary: "A website sized and priced for a small business, built to produce enquiries.",
+    cardCta: "See Small Business Options",
+    cta: { label: "Get a Website Quote", href: "/contact?need=new" },
+    problems: [
+      "You've been quoted $12,000 by an agency for a five-page site",
+      "You've been quoted $800 by someone who'll disappear after launch",
+      "Your DIY site works but doesn't look like a business you'd hire",
+      "You get compliments on the site and no enquiries from it",
+      "You don't know what a small business website should actually include",
+      "You need it done in weeks, not months",
+    ],
+    includes: [
+      "A short strategy call: who the site is for, what they need to do, what stops them",
+      "Five to eight pages, structured around the enquiry path — not a template's page list",
+      "Custom design that looks like a business worth hiring, on a phone first",
+      "Copy direction, so the site says what you do, where, and why you",
+      "Forms wired to your inbox, calendar or CRM — and tested",
+      "Technical SEO and local SEO foundations, so the site can be found",
+      "Google Analytics with conversion tracking, so you know if it's working",
+      "Training so you can edit it yourself, and a care plan if you'd rather not",
+    ],
+    pricing: [
+      { label: "Website Build", price: "from $3,500 + GST", note: "Five to eight pages, conversion-focused, SEO and tracking included" },
+      { label: "Website + automation", price: "from $5,000 + GST", note: "The site plus an AI enquiry assistant and follow-up workflows" },
+      { label: "Website Care", price: "from $249/month", note: "Hosting, backups, updates, monitoring and small changes" },
+    ],
+    priceFrom: 3500,
+    priceNote: "Fixed price in writing after a free audit. Three to five weeks once content is ready. Payment in stages, not all up front.",
+    process: [
+      { title: "Free audit", body: "If you have a site, I look at it. If you don't, we talk about the business for thirty minutes. Either way, a short written plan." },
+      { title: "Structure and words", body: "The page plan and the copy direction come first. Design built around lorem ipsum gets rebuilt when the real words arrive." },
+      { title: "Design and build", body: "Reviewed as real pages on your own phone, not as pictures of pages." },
+      { title: "Launch and measure", body: "Tracking is on from day one. Thirty days in, we look at what the site is actually doing." },
+    ],
+    faqQuestions: [
+      "How much does a website cost in Perth?",
+      "What should a small business website include?",
+      "How long does a website take to build?",
+      "Do you work with WordPress?",
+    ],
+    related: [
+      { href: "/web-design-perth", label: "Web Design Perth" },
+      { href: "/answers/what-should-a-small-business-website-include", label: "What should a small business website include?" },
+      { href: "/answers/how-much-does-a-website-cost-in-perth", label: "How much does a website cost in Perth?" },
+      { href: "/website-maintenance-perth", label: "Website Care" },
+    ],
+    keywords: [
+      "small business web design Perth",
+      "small business website Perth",
+      "affordable web design Perth",
+      "tradie website Perth",
+      "clinic website design Perth",
+    ],
+    showTuneUp: true,
+  },
+  {
+    slug: "local-seo-perth",
+    name: "Local SEO",
+    serviceType: "Local SEO",
+    title: "Local SEO Perth | Get Found in Maps and Local Search",
+    h1: "Local SEO for Perth businesses that",
+    h1Tail: "want the phone to ring.",
+    eyebrow: "Local SEO Perth",
+    answer:
+      "Oria Digital does local SEO for Perth service businesses: Google Business Profile set up and optimised properly, consistent business details across the web, location and service pages that actually earn their place, reviews handled, and technical SEO on the site itself. Measured in map-pack visibility and enquiries, not vanity rankings. From $299 + GST.",
+    summary: "Show up in the map pack and local search for the jobs you want.",
+    cardCta: "Improve Local Visibility",
+    cta: { label: "Book a Local SEO Review", href: "/contact?need=improve" },
+    problems: [
+      "Competitors show in the map pack for your service and you don't",
+      "Your Google Business Profile was set up once and never touched",
+      "Your address or phone number is different on three directories",
+      "You serve twenty suburbs and the site mentions one",
+      "You have good reviews on paper and nobody can find them",
+      "You rank for your business name and nothing else",
+    ],
+    includes: [
+      "Google Business Profile: categories, services, service areas, photos, posts, Q&A — done properly, not just claimed",
+      "Business details (name, address, phone) made consistent across the directories that matter",
+      "Location and service pages that have real content — never mass-generated suburb pages",
+      "Review process: how to ask, when, and how to respond",
+      "LocalBusiness structured data on the site, matching the profile exactly",
+      "Technical SEO foundations: titles, headings, indexing, speed",
+      "Tracking for calls, direction requests and enquiries from local search",
+      "A monthly view of map-pack visibility for the terms that matter",
+    ],
+    pricing: [
+      { label: "Local SEO review", price: "$299", note: "Profile, citations, site and competitor review with prioritised fixes" },
+      { label: "Local SEO setup", price: "from $899 + GST", note: "Profile optimisation, citation clean-up, schema, location page structure" },
+      { label: "Growth + Optimisation", price: "from $499/month", note: "Ongoing local SEO, content and reporting" },
+    ],
+    priceFrom: 299,
+    priceNote: "No suburb-page spam. Location pages are built only where there's something real to say, because that's the only kind Google keeps ranking.",
+    process: [
+      { title: "Review", body: "Your profile, your citations, your site, and the three competitors who outrank you. Where the gap actually is." },
+      { title: "Foundations", body: "Profile completed properly, business details made consistent, structured data added, tracking on." },
+      { title: "Pages", body: "Service and location pages that answer what a person in that suburb is asking. Written, not generated." },
+      { title: "Reviews and reporting", body: "A repeatable way to earn reviews, and a monthly view of where you appear and what it produced." },
+    ],
+    faqQuestions: [
+      "Why is my website getting traffic but no enquiries?",
+      "How much does a website cost in Perth?",
+      "Do you work outside Perth?",
+    ],
+    related: [
+      { href: "/web-design-perth", label: "Web Design Perth" },
+      { href: "/website-optimisation-perth", label: "Website Optimisation" },
+      { href: "/answers/why-is-my-website-getting-traffic-but-no-enquiries", label: "Traffic but no enquiries?" },
+      { href: "/website-maintenance-perth", label: "Website Care" },
+    ],
+    keywords: [
+      "local SEO Perth",
+      "Google Business Profile Perth",
+      "map pack Perth",
+      "local search optimisation Perth",
+      "SEO for tradies Perth",
+    ],
+    showTuneUp: true,
+  },
 ];
 
 export const serviceBySlug = (slug: string) => services.find((s) => s.slug === slug);
@@ -461,4 +661,6 @@ export const homepageServices = services.filter((s) =>
 );
 
 /** The five under the Services dropdown, in nav order. */
-export const navServices = services.filter((s) => s.slug !== "wordpress-developer-perth");
+export const navServices = services.filter((s) =>
+  ["web-design-perth", "wordpress-support-perth", "website-optimisation-perth", "ai-automation-perth", "website-maintenance-perth"].includes(s.slug),
+);
