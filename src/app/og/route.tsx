@@ -12,13 +12,36 @@ import { site } from "@/lib/site";
 
 export const runtime = "nodejs";
 
-const clamp = (value: string, max: number) =>
-  value.length > max ? `${value.slice(0, max - 1).trimEnd()}…` : value;
+/**
+ * Query values are attacker-controlled: this endpoint is public and takes
+ * whatever is in the URL. `next/og` renders JSX to SVG internally, so anything
+ * from the query string ends up inside an SVG document.
+ *
+ * GHSA-vcvr-r3jv-pc5j (critical, RCE in the Node `ImageResponse`) turned on
+ * exactly that path. It is fixed in next >= 16.3.6, which this project pins,
+ * and the advisory's own workaround is implemented below as defence in depth:
+ * strip anything that is not plain printable text before it reaches SVG.
+ *
+ * It also stops the endpoint being used as a free generator of convincing
+ * Oria-branded images with arbitrary wording on them.
+ */
+function safeText(value: string | null, fallback: string, max: number): string {
+  const cleaned = (value ?? "")
+    // Control characters, including the ones that can terminate an SVG token.
+    .replace(/[\u0000-\u001F\u007F-\u009F]/g, " ")
+    // Markup and entity delimiters have no business in a rendered label.
+    .replace(/[<>&"'`\\]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (!cleaned) return fallback;
+  return cleaned.length > max ? `${cleaned.slice(0, max - 1).trimEnd()}…` : cleaned;
+}
 
 export function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const title = clamp(searchParams.get("title")?.trim() || site.name, 90);
-  const eyebrow = clamp(searchParams.get("eyebrow")?.trim() || site.tagline, 40);
+  const title = safeText(searchParams.get("title"), site.name, 90);
+  const eyebrow = safeText(searchParams.get("eyebrow"), site.tagline, 40);
 
   return new ImageResponse(
     (

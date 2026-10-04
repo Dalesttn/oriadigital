@@ -193,6 +193,33 @@ The `leads` table DDL is in [INTEGRATIONS.md](./INTEGRATIONS.md).
 
 ---
 
+## Dependency security
+
+Run `npm audit --omit=dev` to see what actually ships. **That must stay at
+zero.** The plain `npm audit` number includes the build toolchain, which never
+reaches a visitor.
+
+**Known, deliberately unfixed:** `braces@3.0.3` (GHSA-vfj7-8cjw-p6xm, high)
+and the four advisories that chain off it — `micromatch`, `fast-glob`,
+`@next/eslint-plugin-next`, `eslint-config-next`. There is no patched release:
+3.0.3 is the latest published version and the advisory lists
+"Patched versions: None". It is reachable only by feeding deeply nested brace
+patterns to ESLint's file globbing, i.e. by attacking your own linter, and it
+is absent from the production bundle.
+
+`npm audit fix --force` "fixes" it by downgrading `eslint-config-next` to
+14.2.35. **Do not run it** — that is a major downgrade onto a Next 14 config
+for a Next 16 app, and it solves nothing real. Re-check when braces publishes
+a fix.
+
+`next` is pinned exactly (not `^`) because GHSA-vcvr-r3jv-pc5j, a critical RCE
+in the Node `next/og` ImageResponse, affected `>=16.2.0 <16.3.6`. This project
+uses that exact code path in `src/app/og/route.tsx` on a public endpoint. Keep
+it at 16.3.6 or newer, and see the comment in that file for the input
+sanitising that backs the version pin up.
+
+---
+
 ## Deployment
 
 Built for a Node host — Hostinger's Node hosting, per the stack brief.
