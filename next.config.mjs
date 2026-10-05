@@ -56,6 +56,13 @@ const nextConfig = {
       { source: "/services/optimisation", destination: "/website-optimisation-perth", permanent: true },
       { source: "/services/ai-automation", destination: "/ai-automation-perth", permanent: true },
       { source: "/services/website-care", destination: "/website-maintenance-perth", permanent: true },
+
+      /**
+       * Consolidated 2026-10-05. Google was splitting every WordPress query
+       * between this page and /wordpress-support-perth, so neither ranked.
+       * Evidence and reasoning: docs/seo/seo-audit.md section 5.
+       */
+      { source: "/wordpress-developer-perth", destination: "/wordpress-support-perth", permanent: true },
     ];
   },
 

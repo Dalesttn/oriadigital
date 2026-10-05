@@ -93,12 +93,60 @@ remains anywhere in the codebase. Prices and commercial terms are unchanged.
 
 ---
 
+## 5. Consolidated the two WordPress pages (decision taken 5 October)
+
+**Problem.** GSC query+page data for 2026-09-08 to 2026-10-04 showed Google
+splitting eleven WordPress queries between `/wordpress-support-perth` and
+`/wordpress-developer-perth`. On the largest, `wordpress developer perth`, the
+support page was served 82 times at position 83.5 and the developer page 41
+times at position 85.8. Neither page accumulated signal; both sat on page 8–10.
+
+**Decision.** Dale chose consolidation over differentiation.
+
+**Change.** `/wordpress-support-perth` survives and now carries both intents.
+`/wordpress-developer-perth` 308s to it.
+
+| File | Change |
+|---|---|
+| `src/lib/content/services.ts` | Merged entry: 12 problems and 12 inclusions spanning break/fix and custom development; 5 pricing rows including a `quoted` development line; 4-step process covering both a fix and a build; 9 keywords; 6 related links. Developer entry removed |
+| `src/app/wordpress-developer-perth/` | Route deleted |
+| `next.config.mjs` | Permanent redirect to the survivor |
+| `src/lib/nav.ts` | Route removed; redirect recorded in `legacyRedirects`; survivor's `modified` bumped to 2026-10-05 — real content change, so the date moves |
+| `src/lib/content/work.ts` | Case study's "WordPress Development" link repointed |
+
+**Positioning of the merged page.**
+
+| | Before | After |
+|---|---|---|
+| Title | WordPress Support Perth \| Help From a Perth WordPress Developer (77 chars) | WordPress Developer & Support Perth (54 chars) |
+| H1 | WordPress help and support in Perth. | WordPress help, support and development in Perth. |
+| Name | WordPress Support | WordPress Support & Development |
+
+The shorter title also resolves the truncation issue flagged in the audit for
+this page. The highest-volume query is `wordpress developer perth`, so
+"Developer" now leads the title; "Support" is retained because the page's two
+best positions were on support and help terms.
+
+**Verified.** `/wordpress-developer-perth` → 308 → `/wordpress-support-perth`.
+Merged page: one H1, canonical correct, Service + FAQPage + HowTo + BreadcrumbList
+schema intact, both intents present in the copy. Sitemap down to 32 URLs with no
+developer entry. Zero remaining internal links to the old URL anywhere on the site.
+
+**What to watch.** The test is whether each WordPress query now maps to one
+page at the 28-day review, and whether position on `wordpress developer perth`
+improves on 83.5. These URLs were last crawled on 14 September, so expect days
+to weeks, not days.
+
+**Reversible.** `git revert` restores the page, the route and the content. The
+redirect would need removing from `next.config.mjs` in the same revert.
+
+---
+
 ## Not changed, deliberately
 
 | Item | Why |
 |---|---|
-| **The two WordPress pages** | Highest-value finding, but consolidating removes a service page. Commercial decision — see `seo-audit.md` section 5 |
-| Page titles (81–87 chars) | Truncation is real but irrelevant at position 80. Revisit at page 1–2 |
+| Page titles (81–87 chars) | Truncation is real but irrelevant at position 80. Revisit at page 1–2. `/wordpress-support-perth` is now 54 as a side effect of the merge |
 | Google Business Profile | Eligibility must be assessed first, and publishing an address needs your agreement |
 | Commercial terms and prices | Reconfirmed unchanged: $149, $299, $3,500, $1,500, $249/month, all + GST |
 | Legacy `/services/*` and `http://` indexed URLs | Redirects already in place; resolve on recrawl |

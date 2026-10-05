@@ -28,9 +28,10 @@ something real to extrapolate.
 - [ ] **Check Search Console by hand** for manual actions and security issues.
       The connected tooling cannot see these, so they are the one blind spot in
       the audit. Two minutes.
-- [ ] **Decide the WordPress question** — `seo-audit.md` section 5. Consolidate
-      onto one page, or differentiate both sharply. This is the highest-value
-      item on the list and it is blocked on you, not on me.
+- [x] ~~Decide the WordPress question~~ — **done 5 October. Consolidated onto
+      `/wordpress-support-perth`; `/wordpress-developer-perth` now 308s to it.**
+- [ ] **Request indexing for `/wordpress-support-perth`** in the GSC UI, so the
+      merged page is recrawled sooner than Google's own schedule.
 - [ ] **Request indexing for `/local-seo-perth`** in the GSC UI. It has never
       been crawled. It now has sitewide links, but a manual request is faster.
 - [ ] **Decide how enquiries get counted.** GSC measures search, not leads. The
@@ -47,15 +48,9 @@ recrawled since 14 September.
 
 ## Week 2 — the chosen WordPress page
 
-Whichever way you decided, Week 2 is executing it.
+The merge itself is done. Week 2 is making the surviving page worth ranking.
 
-- [ ] If consolidating: fold the developer content into
-      `/wordpress-support-perth`, add the 308, update internal links.
-- [ ] If differentiating: rewrite both pages so the distinction is obvious in
-      the first screen of each, and cross-link them with plain "you probably
-      want the other page if…" wording.
-- [ ] Either way, strengthen the surviving page with the things the brief calls
-      for and the site does not yet have: the problems you actually get called
+- [ ] Strengthen `/wordpress-support-perth` with the things it still lacks: the problems you actually get called
       about in customer language, the quote process, realistic response
       expectations **that you are willing to commit to**, and FAQs drawn from
       real enquiries.

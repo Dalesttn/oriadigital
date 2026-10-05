@@ -41,12 +41,11 @@ export const routes: Route[] = [
   { href: "/", label: "Home", priority: 1, changeFrequency: "weekly", modified: "2026-09-14" },
   { href: "/services", label: "Services", priority: 0.8, changeFrequency: "monthly", modified: "2026-09-14", primary: true },
   { href: "/web-design-perth", label: "Web Design", priority: 0.9, changeFrequency: "monthly", modified: "2026-09-14", service: true },
-  { href: "/wordpress-support-perth", label: "WordPress Support", priority: 0.9, changeFrequency: "monthly", modified: "2026-09-14", service: true },
+  { href: "/wordpress-support-perth", label: "WordPress Support", priority: 0.9, changeFrequency: "monthly", modified: "2026-10-05", service: true },
   { href: "/website-optimisation-perth", label: "Website Optimisation", priority: 0.9, changeFrequency: "monthly", modified: "2026-09-14", service: true },
   { href: "/ai-automation-perth", label: "AI Automation", priority: 0.9, changeFrequency: "monthly", modified: "2026-09-14", service: true },
   { href: "/website-maintenance-perth", label: "Website Care", priority: 0.8, changeFrequency: "monthly", modified: "2026-09-14", service: true },
   // In the WordPress cluster and sitemap, but not the Services dropdown (§33).
-  { href: "/wordpress-developer-perth", label: "WordPress Developer", priority: 0.8, changeFrequency: "monthly", modified: "2026-09-14", supporting: true },
   { href: "/website-speed-optimisation-perth", label: "Speed Optimisation", priority: 0.8, changeFrequency: "monthly", modified: "2026-09-14", supporting: true },
   { href: "/small-business-web-design-perth", label: "Small Business Web Design", priority: 0.8, changeFrequency: "monthly", modified: "2026-09-14", supporting: true },
   { href: "/local-seo-perth", label: "Local SEO", priority: 0.8, changeFrequency: "monthly", modified: "2026-09-14", supporting: true },
@@ -103,4 +102,6 @@ export const legacyRedirects: { from: string; to: string }[] = [
   { from: "/services/optimisation", to: "/website-optimisation-perth" },
   { from: "/services/ai-automation", to: "/ai-automation-perth" },
   { from: "/services/website-care", to: "/website-maintenance-perth" },
+  // Consolidated 2026-10-05 — see docs/seo/seo-audit.md section 5.
+  { from: "/wordpress-developer-perth", to: "/wordpress-support-perth" },
 ];

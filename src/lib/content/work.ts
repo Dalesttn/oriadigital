@@ -100,7 +100,7 @@ export const oriaHaven = {
   ],
   services: [
     { href: "/web-design-perth", label: "Web Design" },
-    { href: "/wordpress-developer-perth", label: "WordPress Development" },
+    { href: "/wordpress-support-perth", label: "WordPress Development" },
     { href: "/website-optimisation-perth", label: "Website Optimisation" },
   ],
   /** Screens. Add files to public/work/ and set the paths here. */

@@ -153,10 +153,12 @@ cannot see.
 
 ---
 
-## 5. The decision I need from you: the two WordPress pages
+## 5. The two WordPress pages — DECIDED AND DONE (5 October 2026)
 
-This is the single highest-value finding, and it is a commercial decision as
-much as a technical one, so I have not acted on it.
+**Dale chose consolidation. Implemented the same day.** `/wordpress-developer-perth`
+now 308s to `/wordpress-support-perth`, which carries both intents. Details in
+`seo-implementation-log.md` section 5. The evidence that drove the decision is
+kept below.
 
 **The evidence.** For eleven separate WordPress queries, Google alternates
 between `/wordpress-support-perth` and `/wordpress-developer-perth`:
@@ -176,24 +178,22 @@ The support page wins on the two highest-intent terms (`wordpress help perth`
 at 44.6 and `wordpress support perth` at 54.2 are the best non-brand positions
 on the site).
 
-**My recommendation: consolidate onto `/wordpress-support-perth`.** Fold the
-developer content into it as a section, and 308 `/wordpress-developer-perth`
-into it. One page would then carry roughly 560 impressions of WordPress demand
-instead of two pages carrying 367 and 193.
+**What was done.** Consolidated onto `/wordpress-support-perth`. The developer
+content — custom themes, plugins, ACF, WooCommerce, PHP and REST integrations —
+is folded in as part of the same page's problems, inclusions and pricing. One
+page now carries roughly 560 impressions of WordPress demand instead of two
+carrying 367 and 193.
 
-**Why I have not done it.** It removes a page that presents WordPress
-development as a distinct service. If you sell custom WordPress development as
-its own offering — different buyer, different price, different conversation —
-then keeping the page and sharply differentiating the two is the better answer.
-That is your call, not mine.
+**What to watch.** Re-run the query+page breakdown at the 28-day review. The
+test of success is that each WordPress query now maps to one page instead of
+two, and that the surviving page's position on `wordpress developer perth`
+improves on 83.5. Google has not recrawled these URLs since 14 September, so
+nothing will move for days to weeks.
 
-**The alternative, if you want to keep both:** make them unmistakably
-different. Support becomes fixes, retainers and small jobs with the $149 entry
-offer. Developer becomes custom builds, plugins, ACF, WooCommerce and
-integrations with project pricing. Remove the overlapping language, and link
-each to the other with clear "you probably want the other page if…" wording.
-
-Either is defensible. Doing neither is the only bad option.
+**What this gives up.** The site no longer presents WordPress development as a
+separately-named service. If custom development becomes a distinct offering
+with its own buyer and price point, the page can be rebuilt later — but it
+should then be genuinely different, not a near-duplicate.
 
 ---
 
