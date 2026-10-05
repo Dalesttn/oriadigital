@@ -39,6 +39,19 @@ const nextConfig = {
    */
   async redirects() {
     return [
+      /**
+       * www -> apex. Both hosts answered 200 on 2026-10-05, so the site was
+       * served from two hostnames and relied on the canonical tag alone to
+       * say which was real. A canonical is a hint; a 308 is not. GSC also
+       * showed http://oriadigital.com.au/ indexed separately.
+       */
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.oriadigital.com.au" }],
+        destination: "https://oriadigital.com.au/:path*",
+        permanent: true,
+      },
+
       { source: "/services/websites", destination: "/web-design-perth", permanent: true },
       { source: "/services/optimisation", destination: "/website-optimisation-perth", permanent: true },
       { source: "/services/ai-automation", destination: "/ai-automation-perth", permanent: true },

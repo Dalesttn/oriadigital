@@ -1,0 +1,32 @@
+query,page(s),clicks,impressions,ctr,avg_position,proposed_action,confidence
+"# Source: Google Search Console, property sc-domain:oriadigital.com.au, search type WEB",,,,,,,
+# Period: 2026-09-08 to 2026-10-04 (all complete data available; property has no earlier data),,,,,,,
+"# Country: all (Australia = 941 of 1027 impressions, 92%). Extracted 2026-10-05.",,,,,,,
+# Positions shown 'a / b' are the same query served by two different pages.,,,,,,,
+wordpress developer perth,/wordpress-support-perth + /wordpress-developer-perth (split),0,123,0.0,83.5 / 85.8,Resolve the two-page split; consolidate signal onto one WordPress page,High
+wordpress developers perth,/wordpress-support-perth + /wordpress-developer-perth (split),0,54,0.0,85.9 / 83.3,Same consolidation,High
+wordpress experts perth,/wordpress-support-perth + /wordpress-developer-perth (split),0,48,0.0,95.6 / 87.2,Same consolidation,High
+wordpress help perth,/wordpress-support-perth + /wordpress-developer-perth (split),0,45,0.0,44.6 / 89.9,"Best WP position on site. Consolidate, then strengthen help/fix content",High
+wordpress development perth,/wordpress-support-perth + /wordpress-developer-perth (split),0,32,0.0,87.9 / 99.2,Same consolidation,High
+wordpress perth,/wordpress-support-perth,0,33,0.0,93.8,Covered by consolidation,Medium
+wordpress support perth,/wordpress-support-perth + /wordpress-developer-perth (split),0,26,0.0,54.2 / 92.0,Primary target term. Consolidate and deepen the page,High
+perth wordpress,/wordpress-support-perth,0,21,0.0,93.1,Covered by consolidation,Medium
+wordpress web developer perth,/wordpress-developer-perth,0,22,0.0,81.7,Covered by consolidation,Medium
+wordpress website help australia,/wordpress-support-perth,0,14,0.0,91.6,National WP-help intent; same page,Medium
+small business web design perth,/small-business-web-design-perth,0,52,0.0,67.4,Page now linked sitewide; re-check after recrawl,Medium
+website maintenance perth,/website-maintenance-perth,0,46,0.0,81.5,Monitor; no change this round,Medium
+ai automation perth,/ai-automation-perth,0,33,0.0,73.0,Monitor; no change this round,Medium
+website maintenance packages perth,/website-maintenance-perth,0,16,0.0,96.4,Monitor,Low
+website maintenance services perth,/website-maintenance-perth,0,14,0.0,85.6,Monitor,Low
+ai for plumbing business,/answers/how-can-ai-help-a-plumbing-business,0,12,0.0,68.9,Article already matched to intent; leave,Medium
+perth website design prices,/web-design-perth,0,11,0.0,89.7,Monitor,Low
+small business websites perth,/small-business-web-design-perth,0,11,0.0,85.3,Covered by the internal-link fix,Medium
+oria digital,/ (brand),8,10,0.8,5.0,Brand works. 8 of 12 total clicks,High
+oria,"/ (brand, ambiguous)",0,43,0.0,57.9,Competing with other Orias. No action,Low
+web optimisation perth,/website-optimisation-perth,0,3,0.0,12.3,Unusually strong position. Watch; cheap win if it holds,Medium
+website cost perth,/answers/how-much-does-a-website-cost-in-perth,0,3,0.0,20.3,Article ranking page 2-3. Best non-brand position on site,High
+how much does a website cost perth,/answers/how-much-does-a-website-cost-in-perth,0,1,0.0,20.0,Same article. Evidence the Answers format works,High
+which web design agencies in perth offer a free website audit?,/free-website-audit,0,1,0.0,11.0,Conversational/AI-style query ranking page 2,Medium
+website optimisation au,/website-optimisation-perth,0,1,0.0,3.0,Position 3 but near-zero volume,Low
+hacked website repair perth,/wordpress-support-perth,0,1,0.0,96.0,Repair intent exists but is thin in this data,Low
+website repairs perth,/wordpress-support-perth,0,1,0.0,76.0,Repair intent exists but is thin in this data,Low

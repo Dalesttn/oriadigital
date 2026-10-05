@@ -1,6 +1,6 @@
 import { site, sameAs, absoluteUrl } from "./site";
 import { services } from "./content/services";
-import { allOffers, recurringOffers, type Offer } from "./content/pricing";
+import { allOffers, type Offer } from "./content/pricing";
 import type { Faq } from "./content/faqs";
 import type { Article } from "./content/answers";
 
@@ -234,45 +234,27 @@ export function serviceSchema(slug: string): Json | null {
   };
 }
 
-/** Everything on the pricing page as one aggregate, plus each offer. */
+/**
+ * Everything on the pricing page, as an OfferCatalog.
+ *
+ * Deliberately not `Product`. Google's Product rich result wants `review` and
+ * `aggregateRating`, and GSC flagged both as missing on 2026-10-05. Oria
+ * Digital has no published reviews yet, and inventing them is not an option,
+ * so the honest fix is the type that actually describes this page: a catalogue
+ * of service offers. It asks for nothing that does not exist. Swap back to
+ * Product only if genuine, verifiable reviews are ever published here.
+ */
 export function pricingSchema(): Json {
   const url = absoluteUrl("/pricing");
   return {
-    "@type": "Product",
+    "@type": "OfferCatalog",
     "@id": `${url}#offers`,
     name: "Oria Digital services and plans",
     description:
-      "Entry offers from $149, website builds from $3,500, AI and automation from $1,500, and care plans from $249 a month.",
-    brand: { "@id": ORG_ID },
+      "Entry offers from $149, website builds from $3,500, AI and automation from $1,500, and care plans from $249 a month. All prices exclude GST.",
     url,
-    offers: {
-      "@type": "AggregateOffer",
-      priceCurrency: site.currency,
-      lowPrice: Math.min(...allOffers.map((o) => o.price)),
-      highPrice: Math.max(...allOffers.map((o) => o.price)),
-      offerCount: allOffers.length,
-      offers: allOffers.map((o) => offerNode(o, url)),
-    },
-  };
-}
-
-/** Recurring plans only — used where just the plans are shown. */
-export function plansSchema(): Json {
-  const url = absoluteUrl("/pricing");
-  return {
-    "@type": "Product",
-    "@id": `${url}#plans`,
-    name: "Oria Digital monthly plans",
-    brand: { "@id": ORG_ID },
-    url,
-    offers: {
-      "@type": "AggregateOffer",
-      priceCurrency: site.currency,
-      lowPrice: Math.min(...recurringOffers.map((o) => o.price)),
-      highPrice: Math.max(...recurringOffers.map((o) => o.price)),
-      offerCount: recurringOffers.length,
-      offers: recurringOffers.map((o) => offerNode(o, url)),
-    },
+    provider: { "@id": ORG_ID },
+    itemListElement: allOffers.map((o) => offerNode(o, url)),
   };
 }
 

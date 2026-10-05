@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
-import { primaryCta, serviceRoutes, resourceRoutes } from "@/lib/nav";
+import { primaryCta, serviceRoutes, supportingRoutes, resourceRoutes } from "@/lib/nav";
 import { site } from "@/lib/site";
 import { OriaLockup } from "@/components/ui/OriaMark";
 import { events } from "@/lib/analytics";
@@ -62,10 +62,17 @@ export function SiteFooter() {
         <nav aria-label="Services" style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 14 }}>
           <span className="label on-dark" style={{ marginBottom: 6 }}>Services</span>
           {serviceRoutes.map((r) => (
-            <Link key={r.href} href={r.href}>
-              {r.label}
-              {r.href.endsWith("-perth") && !["/website-optimisation-perth", "/ai-automation-perth", "/website-maintenance-perth"].includes(r.href) ? " Perth" : ""}
-            </Link>
+            <Link key={r.href} href={r.href}>{r.label}</Link>
+          ))}
+        </nav>
+
+        {/* Supporting commercial pages. In the footer so they get a link from
+            every page: without external authority, internal links are most of
+            what they have, and /local-seo-perth went uncrawled on one link. */}
+        <nav aria-label="More services" style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 14 }}>
+          <span className="label on-dark" style={{ marginBottom: 6 }}>More</span>
+          {supportingRoutes.map((r) => (
+            <Link key={r.href} href={r.href}>{r.label}</Link>
           ))}
         </nav>
 

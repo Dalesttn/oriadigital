@@ -6,15 +6,19 @@ import { site } from "@/lib/site";
 /**
  * XML sitemap, generated from the same route table the navigation uses plus
  * the Answers articles — so a new page cannot be added and forgotten.
+ *
+ * `lastModified` comes from hand-maintained content dates, never from build
+ * time. Emitting `new Date()` told Google that all 33 URLs changed on every
+ * deploy, including deploys that only touched one file. Google discounts a
+ * lastmod it cannot trust, and a new domain has no crawl budget to waste on
+ * re-fetching pages that did not change.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
-
   const pages = routes
     .filter((r) => !r.noSitemap)
     .map((route) => ({
       url: `${site.url}${route.href === "/" ? "" : route.href}`,
-      lastModified,
+      lastModified: new Date(`${route.modified}T00:00:00.000Z`),
       changeFrequency: route.changeFrequency,
       priority: route.priority,
     }));
