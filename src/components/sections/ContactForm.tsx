@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Section";
-import { needs, needValues, contactSchema, type Need } from "@/lib/contact-schema";
+import { needs, needValues, contactSchema, HONEYPOT_FIELD, type Need } from "@/lib/contact-schema";
 import { readAttribution } from "@/lib/attribution";
 import { events, track } from "@/lib/analytics";
 import { site } from "@/lib/site";
@@ -58,7 +58,9 @@ export function ContactForm() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(parsed.data),
+        // The honeypot is not in the schema, so Zod strips it — send it
+        // explicitly or the trap never reaches the server.
+        body: JSON.stringify({ ...parsed.data, [HONEYPOT_FIELD]: fd.get(HONEYPOT_FIELD) ?? "" }),
       });
       const result = (await res.json()) as { ok: boolean; error?: string };
       if (!res.ok || !result.ok) {
@@ -106,9 +108,16 @@ export function ContactForm() {
       className="ocard"
       style={{ padding: "clamp(24px,3vw,38px)", display: "flex", flexDirection: "column", gap: 22, boxShadow: "var(--shadow-md)" }}
     >
+      {/*
+        Honeypot. No label and a meaningless name, so browser autofill and
+        password managers have nothing to match on — a labelled "Company"
+        field was being filled in for real people, and because the field is
+        off-screen the resulting error was invisible and the form silently
+        refused to send. The field is not in the schema, so it can never
+        block a submission; the API route checks it.
+      */}
       <div aria-hidden="true" style={{ position: "absolute", left: "-9999px" }}>
-        <label htmlFor="c-company">Company</label>
-        <input id="c-company" name="company" tabIndex={-1} autoComplete="off" />
+        <input name={HONEYPOT_FIELD} tabIndex={-1} autoComplete="off" />
       </div>
 
       {/* Step 1 */}

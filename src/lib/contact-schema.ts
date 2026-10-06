@@ -61,8 +61,25 @@ export type Attribution = z.infer<typeof attributionSchema>;
 
 const optionalText = (max: number) => z.string().trim().max(max).optional().or(z.literal(""));
 
-/** Honeypot — must stay empty. Bots fill every field they can see. */
-const honeypot = z.string().max(0).optional().or(z.literal(""));
+/**
+ * Honeypot field name.
+ *
+ * Deliberately meaningless. It used to be `company`, with a visible-to-autofill
+ * `<label>Company</label>` — and "company"/"organization" is a standard browser
+ * and password-manager autofill category, so real people with autofill enabled
+ * had the trap filled in for them. `autocomplete="off"` does not stop password
+ * managers.
+ *
+ * The honeypot is deliberately **not** part of the schemas below. It is an
+ * anti-spam mechanism, not a property of an enquiry, and it is checked once in
+ * the API route against the raw body. Keeping it out of the schema means a
+ * filled honeypot can never fail client-side validation, which is what silently
+ * killed submissions: the form would refuse to send and show nothing, because
+ * the error belonged to a field positioned off-screen.
+ *
+ * Unknown keys are stripped by Zod, so the value never reaches the lead row.
+ */
+export const HONEYPOT_FIELD = "subject_ref";
 
 export const contactSchema = z.object({
   source: z.literal("contact"),
@@ -72,7 +89,6 @@ export const contactSchema = z.object({
   website: optionalText(200),
   message: optionalText(4000),
   budget: optionalText(60),
-  company: honeypot,
   attribution: attributionSchema.optional(),
 });
 
@@ -88,7 +104,6 @@ export const auditSchema = z.object({
   problem: z.enum(auditProblemValues),
   phone: optionalText(40),
   businessType: optionalText(120),
-  company: honeypot,
   attribution: attributionSchema.optional(),
 });
 

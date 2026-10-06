@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { submissionSchema, toLeadRow, needLabel, auditProblemLabel } from "@/lib/contact-schema";
+import { submissionSchema, toLeadRow, needLabel, auditProblemLabel, HONEYPOT_FIELD } from "@/lib/contact-schema";
 import { site } from "@/lib/site";
 
 /**
@@ -55,15 +55,14 @@ export async function POST(request: Request) {
   }
 
   /**
-   * Honeypot, checked before validation.
+   * Honeypot, checked here and nowhere else.
    *
-   * The schema also rejects a non-empty `company`, but it does so with a 422
-   * that names the field — which tells a bot exactly which input is the trap.
-   * Checking here means a filled honeypot gets an ordinary success response
-   * and learns nothing.
+   * It is kept out of the schemas on purpose — see HONEYPOT_FIELD. Checking it
+   * before validation also means a filled trap gets an ordinary success
+   * response rather than a 422 naming the field, so a bot learns nothing.
    */
-  if (typeof body === "object" && body !== null && "company" in body) {
-    const honey = (body as { company?: unknown }).company;
+  if (typeof body === "object" && body !== null && HONEYPOT_FIELD in body) {
+    const honey = (body as Record<string, unknown>)[HONEYPOT_FIELD];
     if (typeof honey === "string" && honey.length > 0) {
       return NextResponse.json({ ok: true });
     }
@@ -82,10 +81,6 @@ export async function POST(request: Request) {
   }
 
   const data = parsed.data;
-
-  // Honeypot: accept silently so a bot learns nothing from the response.
-  if (data.company) return NextResponse.json({ ok: true });
-
   const row = toLeadRow(data);
   const failures: string[] = [];
   /** Which services failed, by name. Returned to the caller; the reason is not. */
