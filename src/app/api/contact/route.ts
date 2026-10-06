@@ -54,6 +54,21 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "Invalid request." }, { status: 400 });
   }
 
+  /**
+   * Honeypot, checked before validation.
+   *
+   * The schema also rejects a non-empty `company`, but it does so with a 422
+   * that names the field — which tells a bot exactly which input is the trap.
+   * Checking here means a filled honeypot gets an ordinary success response
+   * and learns nothing.
+   */
+  if (typeof body === "object" && body !== null && "company" in body) {
+    const honey = (body as { company?: unknown }).company;
+    if (typeof honey === "string" && honey.length > 0) {
+      return NextResponse.json({ ok: true });
+    }
+  }
+
   const parsed = submissionSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
@@ -75,6 +90,10 @@ export async function POST(request: Request) {
   const failures: string[] = [];
   /** Which services failed, by name. Returned to the caller; the reason is not. */
   const failedSinks: string[] = [];
+  /** Which services actually accepted the enquiry. */
+  const deliveredSinks: string[] = [];
+  /** Which services are not configured, so were never attempted. */
+  const skippedSinks: string[] = [];
 
   // 1. Persist the enquiry.
   const supabaseUrl = process.env.SUPABASE_URL;
@@ -96,11 +115,15 @@ export async function POST(request: Request) {
       if (error) {
         failures.push(`supabase: ${error.message}`);
         failedSinks.push("supabase");
+      } else {
+        deliveredSinks.push("supabase");
       }
     } catch (err) {
       failures.push(`supabase: ${(err as Error).message}`);
       failedSinks.push("supabase");
     }
+  } else {
+    skippedSinks.push("supabase");
   }
 
   // 2. Notify.
@@ -157,32 +180,87 @@ export async function POST(request: Request) {
       if (error) {
         failures.push(`resend: ${error.message}`);
         failedSinks.push("resend");
+      } else {
+        deliveredSinks.push("resend");
       }
     } catch (err) {
       failures.push(`resend: ${(err as Error).message}`);
       failedSinks.push("resend");
     }
+  } else {
+    /**
+     * Both halves are required. `RESEND_API_KEY` without `CONTACT_FROM_EMAIL`
+     * silently skips the whole block, which is one of the ways this endpoint
+     * used to report success while sending nothing.
+     */
+    skippedSinks.push(
+      !resendKey && !notifyFrom
+        ? "resend"
+        : !resendKey
+          ? "resend (RESEND_API_KEY missing)"
+          : "resend (CONTACT_FROM_EMAIL missing)",
+    );
   }
 
-  if (failures.length) {
-    console.error("[contact] delivery failures:", failures.join(" | "));
-    // A configured sink failed — say so rather than showing a false success.
-    // `sink` names which service broke but never why; the underlying message
-    // can carry connection strings and is kept server-side.
+  /**
+   * Nothing was delivered anywhere.
+   *
+   * This previously returned `{ ok: true }`, so a production deployment with
+   * no environment variables set would show the visitor "Thanks — I'll reply
+   * within one business day" and drop the enquiry on the floor. Silent data
+   * loss is the worst outcome available here, and it is invisible from the
+   * outside: the form looks like it works.
+   *
+   * In development there is no sink and that is fine — log the payload so the
+   * form is still usable before any keys exist. In production it is a fault.
+   */
+  if (deliveredSinks.length === 0) {
+    if (process.env.NODE_ENV !== "production") {
+      console.info("[contact] no delivery configured; enquiry received:", row);
+      return NextResponse.json({ ok: true, delivered: [], skipped: skippedSinks });
+    }
+    console.error(
+      "[contact] ENQUIRY NOT STORED OR SENT.",
+      `failed=[${failedSinks.join(", ") || "none"}]`,
+      `unconfigured=[${skippedSinks.join(", ") || "none"}]`,
+      failures.length ? `| ${failures.join(" | ")}` : "",
+      "| payload:",
+      JSON.stringify(row),
+    );
     return NextResponse.json(
       {
         ok: false,
         error: `Something went wrong sending your request. Please email ${site.contact.email} directly.`,
         sink: failedSinks,
+        skipped: skippedSinks,
       },
-      { status: 502 },
+      { status: failedSinks.length ? 502 : 500 },
     );
   }
 
-  if (!supabaseUrl && !resendKey) {
-    // No sink configured yet: log so local development still shows the payload.
-    console.info("[contact] no delivery configured; enquiry received:", row);
+  /**
+   * Partial delivery. At least one sink has the enquiry, so the visitor is not
+   * asked to send it twice — but the failure is still reported and logged.
+   */
+  if (failures.length) {
+    console.error(
+      "[contact] partial delivery:",
+      `ok=[${deliveredSinks.join(", ")}]`,
+      `failed=[${failedSinks.join(", ")}]`,
+      `| ${failures.join(" | ")}`,
+    );
   }
 
-  return NextResponse.json({ ok: true });
+  /**
+   * `delivered` and `skipped` name which services handled the enquiry — never
+   * endpoints, credentials or error detail. Hostinger exposes no application
+   * logs for this app, so the response body is the only diagnostic channel
+   * available when enquiries stop arriving.
+   */
+  return NextResponse.json({
+    ok: true,
+    delivered: deliveredSinks,
+    ...(failedSinks.length ? { sink: failedSinks } : {}),
+    ...(skippedSinks.length ? { skipped: skippedSinks } : {}),
+  });
 }

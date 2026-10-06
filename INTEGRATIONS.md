@@ -180,6 +180,35 @@ confirm you get a field error rather than a success screen.
 
 Delete the test row when done.
 
+### Reading the response — which sinks actually ran
+
+A successful submission names the services that accepted the enquiry:
+
+```bash
+curl -sS -X POST https://oriadigital.com.au/api/contact \
+  -H "Content-Type: application/json" \
+  -d '{"source":"contact","need":"unsure","name":"TEST ignore","email":"you@example.com","message":"test"}'
+```
+
+| Response | Meaning |
+|---|---|
+| `{"ok":true,"delivered":["supabase","resend"]}` | Both working. This is the goal |
+| `{"ok":true,"delivered":["supabase"],"skipped":["resend (CONTACT_FROM_EMAIL missing)"]}` | The enquiry is stored but **no email was sent**. The named variable is not set in hPanel |
+| `{"ok":true,"delivered":["resend"],"skipped":["supabase"]}` | Email sent, nothing recorded |
+| `{"ok":false,...,"skipped":[...]}` with `500` | **Nothing was stored or sent.** Neither service is configured |
+| `{"ok":false,...,"sink":["resend"]}` with `502` | Resend is configured and rejected the send — see the table below |
+
+`delivered` and `skipped` name services only, never keys, endpoints or error
+detail. They exist because this app exposes no runtime logs on Hostinger, so
+the response body is the only way to tell a working form from a silent one.
+
+**The `skipped` case is the dangerous one.** An unconfigured service is not an
+error — the endpoint simply does not call it. Before October 2026 that produced
+`{"ok":true}` and the visitor saw "Thanks — I'll reply within one business day"
+while the enquiry went nowhere. If every service is unconfigured the endpoint
+now returns `500` and writes the full payload to the server log, so an enquiry
+is never lost without a trace.
+
 ### If the form returns an error
 
 The endpoint returns `502` when a configured sink fails, and logs the reason to
@@ -188,7 +217,7 @@ Common causes:
 
 | Log says | Cause |
 |---|---|
-| `resend: ... domain is not verified` | DNS not propagated yet, or `CONTACT_FROM_EMAIL` is on a different domain than the one you verified |
+| `resend: ... domain is not verified` | DNS not propagated yet, or `CONTACT_FROM_EMAIL` is on a different domain than the one you verified. **Check the subdomain:** if you verified `send.oriadigital.com.au`, then `info@oriadigital.com.au` is a *different* domain and will be rejected — the from address has to be `...@send.oriadigital.com.au` |
 | `supabase: relation "public.leads" does not exist` | table not created, or created in a schema other than `public` |
 | `supabase: Invalid API key` | you used the `anon` key instead of `service_role` |
 
