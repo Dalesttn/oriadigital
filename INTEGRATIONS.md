@@ -192,7 +192,7 @@ curl -sS -X POST https://oriadigital.com.au/api/contact \
 
 | Response | Meaning |
 |---|---|
-| `{"ok":true,"delivered":["supabase","resend"]}` | Both working. This is the goal |
+| `{"ok":true,"delivered":["supabase","resend"]}` | The row was inserted and Resend **accepted** the message. This is the goal — but see the warning below |
 | `{"ok":true,"delivered":["supabase"],"skipped":["resend (CONTACT_FROM_EMAIL missing)"]}` | The enquiry is stored but **no email was sent**. The named variable is not set in hPanel |
 | `{"ok":true,"delivered":["resend"],"skipped":["supabase"]}` | Email sent, nothing recorded |
 | `{"ok":false,...,"skipped":[...]}` with `500` | **Nothing was stored or sent.** Neither service is configured |
@@ -201,6 +201,15 @@ curl -sS -X POST https://oriadigital.com.au/api/contact \
 `delivered` and `skipped` name services only, never keys, endpoints or error
 detail. They exist because this app exposes no runtime logs on Hostinger, so
 the response body is the only way to tell a working form from a silent one.
+
+> **`delivered: ["resend"]` means accepted, not received.** Resend returns
+> success the moment it takes the message off your hands. Everything after that
+> — the recipient's mail server, a bounce, a spam folder, a suppression list —
+> is invisible to this endpoint. If `delivered` includes `resend` and the email
+> still does not arrive, the fault is downstream: check the **Emails** log in
+> the Resend dashboard for the per-message status (delivered / bounced /
+> complained), and confirm `CONTACT_NOTIFY_EMAIL` is a mailbox that actually
+> exists and is monitored.
 
 **The `skipped` case is the dangerous one.** An unconfigured service is not an
 error — the endpoint simply does not call it. Before October 2026 that produced
